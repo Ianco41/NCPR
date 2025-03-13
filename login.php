@@ -48,8 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") { // Remove `isset($_POST["login"])`
 
         if ($role === "admin") {
             echo json_encode(["status" => "success", "message" => "Admin have successfully logged in.", "redirect" => "admin_dashboard.php"]);
-        } else if ($role === "superadmin") {
-            echo json_encode(["status" => "success", "message" => "Admin have successfully logged in.", "redirect" => "superadmin_dashboard.php"]);
         } else {
             echo json_encode(["status" => "error", "message" => "Unauthorized role."]);
         }

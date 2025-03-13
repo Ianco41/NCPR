@@ -306,12 +306,24 @@ $result = $conn->query($query);
             <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="viewModalLabel">View NCPR Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; position: relative;">
+                            <!-- First Image (Left Corner) -->
+                            <img src="asset/Picture1.png" alt="Logo" style="height: 50px; object-fit: contain;">
+
+                            <!-- Second Image (Right Corner) -->
+                            <div style="position: relative;">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                    style="position: absolute; top: -10px; right: -10px;" class="m-5">
+                                </button>
+                                <img src="asset/Picture2.png" alt="Logo" style="height: 50px; object-fit: contain;">
+                            </div>
                         </div>
+
                         <div class="modal-body">
                             <div class="row d-flex">
+                                <div class="border mb-3 align-items-center p-2">
+                                    <h5 class="text-center">NON-CONFORMING PRODUCT RECORD</h5>
+                                </div>
                                 <!-- Left Side Content (Takes up 9 columns) -->
                                 <div class="col-md-9 m-0">
                                     <div class="row">
@@ -418,11 +430,11 @@ $result = $conn->query($query);
                                     <div class="d-flex">
                                         <p style="font-size: 12px;"><strong>Deviation?</strong></p>
                                         <div class="form-check form-check-inline ms-5">
-                                            <input class="form-check-input form-check-input-sm" type="checkbox" id="deviation-yes" disabled>
+                                            <input class="form-check-input form-check-input-sm" type="checkbox" id="deviation-yes">
                                             <label class="form-check-label" for="deviation-yes" style="font-size: 10px;">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input form-check-input-sm" type="checkbox" id="deviation-no" disabled>
+                                            <input class="form-check-input form-check-input-sm" type="checkbox" id="deviation-no">
                                             <label class="form-check-label" for="deviation-no" style="font-size: 10px;">No</label>
                                         </div>
                                     </div>
@@ -430,18 +442,23 @@ $result = $conn->query($query);
                                     <div class="d-flex align-items-center">
                                         <p class="m-0" style="font-size: 12px;"><strong>Issue Repeating?</strong></p>
                                         <div class="form-check form-check-inline" style="margin-left: 12px;">
-                                            <input class="form-check-input form-check-input-sm" type="checkbox" id="repeating-yes" disabled>
+                                            <input class="form-check-input form-check-input-sm" type="checkbox" id="repeating-yes">
                                             <label class="form-check-label" for="repeating-yes" style="font-size: 10px;">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input form-check-input-sm" type="checkbox" id="repeating-no" disabled>
+                                            <input class="form-check-input form-check-input-sm" type="checkbox" id="repeating-no">
                                             <label class="form-check-label" for="repeating-no" style="font-size: 10px;">No</label>
                                         </div>
                                     </div>
+                                    <div style="display: d-block; align-items: center;">
+                                        <span class="d-inline-block" style="font-size: 12px;"><strong>Cavity Affected:</strong></span>
+                                        <span id="view-cavity" class="border-bottom border-dark d-inline-block text-center" style="min-width: 100px; font-size: 12px"></span>
+                                    </div>
 
-                                    <span class="d-inline-block" style="font-size: 12px;"><strong>Cavity Affected:</strong></span>
-                                    <span id="view-cavity" class="border-bottom border-dark d-inline-block text-center" style="min-width: 100px; font-size: 12px"></span>
-                                    <span class="d-inline-block" style="font-size: 12px;"><strong>Machine:</strong></span><span id="view-machine" class="border-bottom border-dark d-inline-block text-center" style="min-width: 100px; font-size: 12px"></span>
+                                    <div style="display: d-block; align-items: center;">
+                                        <span class="d-inline-block" style="font-size: 12px;"><strong>Machine:</strong></span>
+                                        <span id="view-machine" class="border-bottom border-dark d-inline-block text-center" style="min-width: 100px; font-size: 12px"></span>
+                                    </div>
                                 </div>
                                 <div class="col-md-3 border p-2">
                                     <span class="d-block" style="font-size: 12px"><strong>Criteria / Doc Reference</strong></span><span id="view-ref" style="font-size: 12px"></span>
@@ -455,45 +472,46 @@ $result = $conn->query($query);
                                     <span style="font-size: 12px" class="fw-bold">Immediate containment action/s or countermeasure/s taken (tick as many as appropriate):</span>
                                     <div style="display: block; margin-bottom: 5px;">
                                         <div style="display: inline-flex; align-items: center;">
-                                            <input type="checkbox" class="form-check-input" id="view-one" style="width: 12px; height: 12px; margin-right: 5px;" disabled>
+                                            <input type="checkbox" class="form-check-input" id="view-one" style="width: 12px; height: 12px; margin-right: 5px;">
                                             <span style="font-size: 12px;">1. Segregate affected part/s - write custodian of the segregated parts</span>
                                         </div>
                                     </div>
                                     <div style="display: block;">
                                         <div style="display: inline-flex; align-items: center;">
-                                            <input type="checkbox" class="form-check-input" id="view-one-one" style="width: 12px; height: 12px; margin-right: 5px;" disabled>
+                                            <input type="checkbox" class="form-check-input" id="view-one-one" style="width: 12px; height: 12px; margin-right: 5px;">
                                             <span style="font-size: 12px;"><strong>1.1. At Hotpress:</strong>Put on hold inventory of affected lay-up materials together with the parts</span>
                                         </div>
                                     </div>
                                     <div style="display: block;">
                                         <div style="display: inline-flex; align-items: center;">
-                                            <input type="checkbox" class="form-check-input" id="view-two" style="width: 12px; height: 12px; margin-right: 5px;" disabled>
+                                            <input type="checkbox" class="form-check-input" id="view-two" style="width: 12px; height: 12px; margin-right: 5px;">
+
                                             <span style="font-size: 12px;" class="me-2">2. Yield off/ 100% inspection. <strong>INSPECTION RESULTS:</strong></span>
                                             <span id="view-two-one" style="font-size: 12px; display: inline-block; border-bottom: 1px solid black; min-width: 100px;"></span>
                                         </div>
                                     </div>
                                     <div style="display: block;">
                                         <div style="display: inline-flex; align-items: center;">
-                                            <input type="checkbox" class="form-check-input" id="view-three" style="width: 12px; height: 12px; margin-right: 5px;" disabled>
+                                            <input type="checkbox" class="form-check-input" id="view-three" style="width: 12px; height: 12px; margin-right: 5px;">
                                             <span style="font-size: 12px;" class="me-2">3. Call the attention of QAE/PE/EE/TECH/CHIEF:</span>
                                             <span id="view-three-one" style="font-size: 12px; display: inline-block; border-bottom: 1px solid black; min-width: 200px;"></span>
                                         </div>
                                     </div>
                                     <div style="display: block;">
                                         <div style="display: inline-flex; align-items: center;">
-                                            <input type="checkbox" class="form-check-input" id="view-four" style="width: 12px; height: 12px; margin-right: 5px;" disabled>
+                                            <input type="checkbox" class="form-check-input" id="view-four" style="width: 12px; height: 12px; margin-right: 5px;">
                                             <span id="view-four" style="font-size: 12px;" class="me-2">4. Attach On-hold Tag and put in On-Hold cage/area</span>
                                         </div>
                                     </div>
                                     <div style="display: block;">
                                         <div style="display: inline-flex; align-items: center;">
-                                            <input type="checkbox" class="form-check-input" id="view-five" style="width: 12px; height: 12px; margin-right: 5px;" disabled>
+                                            <input type="checkbox" class="form-check-input" id="view-five" style="width: 12px; height: 12px; margin-right: 5px;">
                                             <span id="view-five" style="font-size: 12px;">5. Check MCS stock for similar Lot Number/AWPI/DC and request to file NCPR</span>
                                         </div>
                                     </div>
                                     <div style="display: block;">
                                         <div style="display: inline-flex; align-items: center;">
-                                            <input type="checkbox" class="form-check-input" id="view-six" style="width: 12px; height: 12px; margin-right: 5px;" disabled>
+                                            <input type="checkbox" class="form-check-input" id="view-six" style="width: 12px; height: 12px; margin-right: 5px;">
                                             <span id="view-six" style="font-size: 12px;">6. Attach copy of OCAP if available, and/or other log forms as part of the containment action</span>
                                         </div>
                                     </div>
@@ -501,11 +519,11 @@ $result = $conn->query($query);
                                         <span style="font-size: 12px;">7. File Shutdown Record</span>
 
                                         <label style="font-size: 12px; display: flex; align-items: center;">
-                                            <input type="checkbox" class="form-check-input" id="view-seven-yes" style="width: 12px; height: 12px; margin-right: 5px;" disabled> Yes
+                                            <input type="checkbox" class="form-check-input" id="view-seven-yes" style="width: 12px; height: 12px; margin-right: 5px;"> Yes
                                         </label>
 
                                         <label style="font-size: 12px; display: flex; align-items: center;">
-                                            <input type="checkbox" class="form-check-input" id="view-seven-no" style="width: 12px; height: 12px; margin-right: 5px;" disabled> No
+                                            <input type="checkbox" class="form-check-input" id="view-seven-no" style="width: 12px; height: 12px; margin-right: 5px;"> No
                                         </label>
                                         <span style="font-size: 12px;">WHO:</span>
                                         <span id="view-seven-one" style="font-size: 12px; display: inline-block; border-bottom: 1px solid black; min-width: 80px;"></span>
@@ -514,47 +532,99 @@ $result = $conn->query($query);
                                     </div>
                                     <div style="display: block;">
                                         <div style="display: inline-flex; align-items: center;">
-                                            <input type="checkbox" class="form-check-input" id="view-eight" style="width: 12px; height: 12px; margin-right: 5px;" disabled>
+                                            <input type="checkbox" class="form-check-input" id="view-eight" style="width: 12px; height: 12px; margin-right: 5px;">
                                             <span style="font-size: 12px;" class="me-2">8. Others (please specify):</span>
                                             <span id="view-eight-one" style="font-size: 12px; display: inline-block; border-bottom: 1px solid black; min-width: 300px;"></span>
                                         </div>
                                     </div>
                                     <div style="display: block;">
                                         <div style="display: inline-flex; align-items: center;">
-                                            <input type="checkbox" class="form-check-input" id="view-nine" style="width: 12px; height: 12px; margin-right: 5px;" disabled>
+                                            <input type="checkbox" class="form-check-input" id="view-nine" style="width: 12px; height: 12px; margin-right: 5px;">
                                             <span style="font-size: 12px;" class="me-2">9. Find affected WIP, FG & raw materials - specify DJ/s and LN/s</span>
                                             <span id="view-nine-one" style="font-size: 12px; display: inline-block; border-bottom: 1px solid black; min-width: 150px;"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 border p-2">
-                                    <span style="font-size: 12px;">Product Recall</span>
+                                    <div style="display: inline-flex; align-items: center; gap: 100px;" class="mb-3">
+                                        <span style="font-size: 15px;">Product Recall</span>
 
-                                    <label style="font-size: 12px; display: flex; align-items: center;">
-                                        <input type="checkbox" class="form-check-input" id="view-seven-yes" style="width: 12px; height: 12px; margin-right: 5px;" disabled> Yes
-                                    </label>
+                                        <label style="font-size: 15px; display: flex; align-items: center;">
+                                            <input type="checkbox" class="form-check-input" id="view-recall-yes" style="margin-right: 5px;"> Yes
+                                        </label>
 
-                                    <label style="font-size: 12px; display: flex; align-items: center;">
-                                        <input type="checkbox" class="form-check-input" id="view-seven-no" style="width: 12px; height: 12px; margin-right: 5px;" disabled> No
-                                    </label>
-                                    <p><strong>Recall:</strong> <span id="view-recall"></span></p>
-                                    <p><strong>FG Parts:</strong> <span id="view-fgparts"></span></p>
+                                        <label style="font-size: 15px; display: flex; align-items: center;">
+                                            <input type="checkbox" class="form-check-input" id="view-recall-no" style="margin-right: 5px;"> No
+                                        </label>
+                                    </div>
+                                    <div style="display: inline-flex; align-items: center; gap: 50px;" class="mb-3">
+                                        <div style="display: block;">
+                                            <div style="display: inline-flex; align-items: center;">
+                                                <input type="checkbox" class="form-check-input" id="view-fgparts" style="margin-right: 5px;">
+                                                <span id="view-fgparts" style="font-size: 15px;">FG PARTS</span>
+                                            </div>
+                                        </div>
 
-                                    <p><strong>Cancel Shipment:</strong> <span id="view-shipment"></span></p>
-                                    <p><strong>Shipment SCHEDULE:</strong> <span id="view-ship_sched"></span></p>
-                                    <p><strong>WIP:</strong> <span id="view-wip"></span></p>
-                                    <p><strong>Stop Process</strong> <span id="view-stop_proc"></span></p>
-                                    <p><strong>Location:</strong> <span id="view-location"></span></p>
-                                    <p><strong>MCS:</strong> <span id="view-mcs"></span></p>
-                                    <p><strong>MCS Details:</strong> <span id="view-mcs-details"></span></p>
-                                    <p><strong>Customer Notification:</strong> <span id="view-customer-notif"></span></p>
+                                        <span style="font-size: 15px;">Cancel Shipment</span>
+
+                                        <label style="font-size: 15px; display: flex; align-items: center;">
+                                            <input type="checkbox" class="form-check-input" id="view-shipment-yes" style="margin-right: 5px;"> Yes
+                                        </label>
+
+                                        <label style="font-size: 15px; display: flex; align-items: center;">
+                                            <input type="checkbox" class="form-check-input" id="view-shipment-no" style="margin-right: 5px;"> No
+                                        </label>
+                                    </div>
+
+                                    <span class="d-inline-block" style="font-size: 15px;"><strong>Shipment SCHEDULE:</strong></span>
+                                    <span id="view-ship_sched" class="border-bottom border-dark d-inline-block text-center" style="min-width: 500px; font-size: 15px"></span>
+                                    <div style="display: inline-flex; align-items: center; gap: 50px;" class="mt-3">
+                                        <div style="display: block;">
+                                            <div style="display: inline-flex; align-items: center;">
+                                                <input type="checkbox" class="form-check-input" id="view-wip" style="margin-right: 5px;">
+                                                <span id="view-wip" style="font-size: 15px;">WIP</span>
+                                            </div>
+                                        </div>
+
+                                        <span style="font-size: 15px;">Stop Process</span>
+
+                                        <label style="font-size: 15px; display: flex; align-items: center;">
+                                            <input type="checkbox" class="form-check-input" id="view-stop_proc-yes" style="margin-right: 5px;"> Yes
+                                        </label>
+
+                                        <label style="font-size: 15px; display: flex; align-items: center;">
+                                            <input type="checkbox" class="form-check-input" id="view-stop_proc-no" style="margin-right: 5px;"> No
+                                        </label>
+                                    </div>
+                                    <div style="display: block;">
+                                        <div style="display: d-block; align-items: center;">
+                                            <span class="d-inline-block" style="font-size: 15px;"><strong>LOCATIONS:</strong></span>
+                                            <span id="view-location" class="border-bottom border-dark d-inline-block text-center" style="min-width: 500px; font-size: 15px"></span>
+                                        </div>
+                                    </div>
+                                    <div style="display: block;">
+                                        <div style="display: inline-flex; align-items: center;">
+                                            <input type="checkbox" class="form-check-input" id="view-mcs" style="margin-right: 5px;">
+                                            <div style="display: d-block; align-items: center;">
+                                                <span id="view-mcs" style="font-size: 15px;">MCS</span>
+                                                <span id="view-mcs_details" class="border-bottom border-dark d-inline-block text-center" style="min-width: 300px; font-size: 15px"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: block;">
+                                        <div style="display: inline-flex; align-items: center;">
+                                            <input type="checkbox" class="form-check-input" id="view-customer_notif" style="margin-right: 5px;">
+                                            <span id="view-customer_notif" style="font-size: 15px;">Customer notification if non-conforming products have been shipped.</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
 
 
-                            <h5>File Attachments</h5>
-                            <div id="file-list" class="d-flex flex-wrap">
+                            <h5 class="text-center mb-5 mt-5">File Attachments</h5>
+                            <div id="file-list" class="d-block flex-wrap">
                                 <!-- Files will be dynamically inserted here -->
                             </div>
                         </div>
@@ -574,236 +644,258 @@ $result = $conn->query($query);
                 </div>
                 <div class="modal-body">
                     <form id="editForm">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="hidden" id="edit-id" name="id">
-                                <div class="mb-2">
-                                    <label class="form-label">Initiator</label>
-                                    <input type="text" class="form-control" id="edit-initiator" name="initiator">
+                        <div class="row g-0">
+                            <div class="col-md-9">
+                                <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                        <input type="hidden" id="edit-id" name="id">
+                                        <input type="text" class="form-control" id="edit-initiator" name="initiator">
+                                        <label class="form-label">Initiator</label>
+                                    </div>
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                        <input type="text" class="form-control" id="edit-ncpr-num" name="ncpr_num">
+                                        <label class="form-label">NCPR Number</label>
+                                    </div>
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                        <input type="date" class="form-control" id="edit-date" name="date">
+                                        <label class="form-label">Date</label>
+                                    </div>
                                 </div>
-                                <div class="mb-2">
-                                    <label class="form-label">NCPR Number</label>
-                                    <input type="text" class="form-control" id="edit-ncpr-num" name="ncpr_num">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Date</label>
-                                    <input type="date" class="form-control" id="edit-date" name="date">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Part Number</label>
-                                    <input type="text" class="form-control" id="edit-part-number" name="part_number">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Part Name</label>
-                                    <input type="text" class="form-control" id="edit-part-name" name="part_name">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Process</label>
-                                    <input type="text" class="form-control" id="edit-process" name="process">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Urgent</label>
-                                    <select class="form-control" id="edit-urgent" name="urgent">
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Issue</label>
-                                    <textarea class="form-control" id="edit-issue" name="issue"></textarea>
-                                </div>
-                            </div>
+                                <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
 
-                            <div class="col-md-6">
-                                <div class="mb-2">
-                                    <label class="form-label">Repeating</label>
-                                    <select class="form-control" id="edit-repeating" name="repeating">
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Machine</label>
-                                    <input type="text" class="form-control" id="edit-machine" name="machine">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Reference</label>
-                                    <input type="text" class="form-control" id="edit-ref" name="ref">
-                                </div>
+                                        <input type="text" class="form-control" id="edit-part-number" name="part_number">
+                                        <label class="form-label">Part Number</label>
+                                    </div>
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                        <input type="text" class="form-control" id="edit-part-name" name="part_name">
+                                        <label class="form-label">Part Name</label>
 
-                                <h5>Supplier Details</h5>
-                                <div class="mb-3">
-                                    <label class="form-label">Supplier</label>
-                                    <input type="text" class="form-control" id="edit-supplier" name="supplier">
+                                    </div>
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+
+                                        <input type="text" class="form-control" id="edit-process" name="process">
+                                        <label class="form-label">Process</label>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Supplier Part Name</label>
-                                    <input type="text" class="form-control" id="edit-supplier-part-name" name="supplier_part_name">
+                                <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                        <input type="text" class="form-control" id="edit-onhold" name="process">
+                                        <label class="form-label">On hold Material</label>
+                                    </div>
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+
+                                        <input type="text" class="form-control" id="edit-supplier-part-name" name="supplier_part_name">
+                                        <label class="form-label">Supplier Part Name</label>
+                                    </div>
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+
+                                        <input type="text" class="form-control" id="edit-supplier-part-number" name="supplier_part_number">
+                                        <label class="form-label">Supplier Part Number</label>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Supplier Part Number</label>
-                                    <input type="text" class="form-control" id="edit-supplier-part-number" name="supplier_part_number">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Invoice Number</label>
-                                    <input type="text" class="form-control" id="edit-invoice-num" name="invoice_num">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Purchase Order</label>
-                                    <input type="text" class="form-control" id="edit-purchase-order" name="purchase_order">
+                                <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                        <input type="text" class="form-control" id="edit-supplier" name="process">
+                                        <label class="form-label">Supplier</label>
+                                    </div>
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+
+                                        <input type="text" class="form-control" id="edit-invoice-num" name="supplier_part_name">
+                                        <label class="form-label">Supplier Part Name</label>
+                                    </div>
+                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+
+                                        <input type="text" class="form-control" id="edit-purchase-order" name="supplier_part_number">
+                                        <label class="form-label">Supplier Part Number</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <h5>Material Details</h5>
-                        <table class="table table-bordered" id="edit-material-table">
-                            <thead>
-                                <tr>
-                                    <th>Material ID</th>
-                                    <th>NTDJ Number</th>
-                                    <th>MNS Number</th>
-                                    <th>Lot/Sublot Quantity</th>
-                                    <th>Quantity Affected</th>
-                                    <th>Quantity Affected (Text)</th>
-                                    <th>Defect Rate</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Material data will be inserted here dynamically -->
-                            </tbody>
-                        </table>
-                        <h5>Additional Details</h5>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-2">
-                                    <label class="form-label">One</label>
-                                    <input type="text" class="form-control" id="edit-one" name="one">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">One One</label>
-                                    <input type="text" class="form-control" id="edit-one-one" name="one_one">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Two</label>
-                                    <input type="text" class="form-control" id="edit-two" name="two">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Two One</label>
-                                    <input type="text" class="form-control" id="edit-two-one" name="two_one">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Three</label>
-                                    <input type="text" class="form-control" id="edit-three" name="three">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Three One</label>
-                                    <input type="text" class="form-control" id="edit-three-one" name="three_one">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Four</label>
-                                    <input type="text" class="form-control" id="edit-four" name="four">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Five</label>
-                                    <input type="text" class="form-control" id="edit-five" name="five">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Six</label>
-                                    <input type="text" class="form-control" id="edit-six" name="six">
-                                </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <label class="form-label">Repeating</label>
+                                <select class="form-control" id="edit-repeating" name="repeating">
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Machine</label>
+                                <input type="text" class="form-control" id="edit-machine" name="machine">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Reference</label>
+                                <input type="text" class="form-control" id="edit-ref" name="ref">
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="mb-2">
-                                    <label class="form-label">Seven</label>
-                                    <input type="text" class="form-control" id="edit-seven" name="seven">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Seven One</label>
-                                    <input type="text" class="form-control" id="edit-seven-one" name="seven_one">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Seven Two</label>
-                                    <input type="text" class="form-control" id="edit-seven-two" name="seven_two">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Eight</label>
-                                    <input type="text" class="form-control" id="edit-eight" name="eight">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Eight One</label>
-                                    <input type="text" class="form-control" id="edit-eight-one" name="eight_one">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Nine</label>
-                                    <input type="text" class="form-control" id="edit-nine" name="nine">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Nine One</label>
-                                    <input type="text" class="form-control" id="edit-nine-one" name="nine_one">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Recall</label>
-                                    <input type="text" class="form-control" id="edit-recall" name="recall">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">FG Parts</label>
-                                    <input type="text" class="form-control" id="edit-fgparts" name="fgparts">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Shipment</label>
-                                    <input type="text" class="form-control" id="edit-shipment" name="shipment">
-                                </div>
-                            </div>
+                            <h5>Supplier Details</h5>
 
-                            <div class="col-md-6">
-                                <div class="mb-2">
-                                    <label class="form-label">Ship Sched</label>
-                                    <input type="text" class="form-control" id="edit-ship-sched" name="ship_sched">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">WIP</label>
-                                    <input type="text" class="form-control" id="edit-wip" name="wip">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Stop Process</label>
-                                    <input type="text" class="form-control" id="edit-stop-proc" name="stop_proc">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Location</label>
-                                    <input type="text" class="form-control" id="edit-location" name="location">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">MCS</label>
-                                    <input type="text" class="form-control" id="edit-mcs" name="mcs">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">MCS Details</label>
-                                    <input type="text" class="form-control" id="edit-mcs-details" name="mcs_details">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Customer Notification</label>
-                                    <input type="text" class="form-control" id="edit-customer-notif" name="customer_notif">
-                                </div>
-                            </div>
                         </div>
-
-                        <h5>File Attachments</h5>
-                        <div id="edit-file-list" class="d-flex flex-wrap"></div>
-
-                        <div class="mb-2">
-                            <label class="form-label">Upload New Files</label>
-                            <input type="file" class="form-control" id="edit-file-upload" name="files[]" multiple>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </div>
-                    </form>
                 </div>
+                <div class="mb-2">
+                    <label class="form-label">Urgent</label>
+                    <select class="form-control" id="edit-urgent" name="urgent">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Issue</label>
+                    <textarea class="form-control" id="edit-issue" name="issue"></textarea>
+                </div>
+
+                <h5>Material Details</h5>
+                <table class="table table-bordered" id="edit-material-table">
+                    <thead>
+                        <tr>
+                            <th>Material ID</th>
+                            <th>NTDJ Number</th>
+                            <th>MNS Number</th>
+                            <th>Lot/Sublot Quantity</th>
+                            <th>Quantity Affected</th>
+                            <th>Quantity Affected (Text)</th>
+                            <th>Defect Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Material data will be inserted here dynamically -->
+                    </tbody>
+                </table>
+                <h5>Additional Details</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-2">
+                            <label class="form-label">One</label>
+                            <input type="text" class="form-control" id="edit-one" name="one">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">One One</label>
+                            <input type="text" class="form-control" id="edit-one-one" name="one_one">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Two</label>
+                            <input type="text" class="form-control" id="edit-two" name="two">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Two One</label>
+                            <input type="text" class="form-control" id="edit-two-one" name="two_one">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Three</label>
+                            <input type="text" class="form-control" id="edit-three" name="three">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Three One</label>
+                            <input type="text" class="form-control" id="edit-three-one" name="three_one">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Four</label>
+                            <input type="text" class="form-control" id="edit-four" name="four">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Five</label>
+                            <input type="text" class="form-control" id="edit-five" name="five">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Six</label>
+                            <input type="text" class="form-control" id="edit-six" name="six">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-2">
+                            <label class="form-label">Seven</label>
+                            <input type="text" class="form-control" id="edit-seven" name="seven">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Seven One</label>
+                            <input type="text" class="form-control" id="edit-seven-one" name="seven_one">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Seven Two</label>
+                            <input type="text" class="form-control" id="edit-seven-two" name="seven_two">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Eight</label>
+                            <input type="text" class="form-control" id="edit-eight" name="eight">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Eight One</label>
+                            <input type="text" class="form-control" id="edit-eight-one" name="eight_one">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Nine</label>
+                            <input type="text" class="form-control" id="edit-nine" name="nine">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Nine One</label>
+                            <input type="text" class="form-control" id="edit-nine-one" name="nine_one">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Recall</label>
+                            <input type="text" class="form-control" id="edit-recall" name="recall">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">FG Parts</label>
+                            <input type="text" class="form-control" id="edit-fgparts" name="fgparts">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Shipment</label>
+                            <input type="text" class="form-control" id="edit-shipment" name="shipment">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-2">
+                            <label class="form-label">Ship Sched</label>
+                            <input type="text" class="form-control" id="edit-ship-sched" name="ship_sched">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">WIP</label>
+                            <input type="text" class="form-control" id="edit-wip" name="wip">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Stop Process</label>
+                            <input type="text" class="form-control" id="edit-stop-proc" name="stop_proc">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" id="edit-location" name="location">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">MCS</label>
+                            <input type="text" class="form-control" id="edit-mcs" name="mcs">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">MCS Details</label>
+                            <input type="text" class="form-control" id="edit-mcs-details" name="mcs_details">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Customer Notification</label>
+                            <input type="text" class="form-control" id="edit-customer-notif" name="customer_notif">
+                        </div>
+                    </div>
+                </div>
+
+                <h5>File Attachments</h5>
+                <div id="edit-file-list" class="d-flex flex-wrap"></div>
+
+                <div class="mb-2">
+                    <label class="form-label">Upload New Files</label>
+                    <input type="file" class="form-control" id="edit-file-upload" name="files[]" multiple>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+                </form>
             </div>
         </div>
+    </div>
     </div>
     </div>
     </div>
@@ -849,8 +941,6 @@ $result = $conn->query($query);
                         }
                         if (response.repeating === "Yes") {
                             $('#repeating-yes').prop('checked', true);
-                        } else {
-                            $('#repeating-no').prop('checked', true);
                         }
 
                         $('#view-awpi').text(response.awpi);
@@ -858,26 +948,49 @@ $result = $conn->query($query);
                         if (response.deviation === "Yes") {
                             $('#deviation-yes').prop('checked', true);
                             $('#deviation-no').prop('checked', false);
-                        } else {
-                            $('#deviation-no').prop('checked', true);
-                            $('#deviation-yes').prop('checked', false);
                         }
-                        $('#view-repeating').text(response.repeating);
                         $('#view-cavity').text(response.cavity);
                         $('#view-machine').text(response.machine);
                         $('#view-ref').text(response.ref);
                         $('#view-bg').text(response.bg);
-                        $('#view-mcs').text(response.mcs);
-                        $('#view-mcs-details').text(response.mcs_details);
-                        $('#view-customer-notif').text(response.customer_notif);
-                        $('#view-recall').text(response.recall);
-                        $('#view-fgparts').text(response.fgparts);
-                        $('#view-shipment').text(response.shipment);
+                        $('#view-mcs').prop('checked', response.mcs === "yes");
+                        $('#view-mcs_details').text(response.mcs_details);
+                        $('#view-customer_notif').prop('checked', response.customer_notif === "yes");
+                        if (response.recall === "yes") {
+                            $('#view-recall-yes').prop('checked', true);
+                            $('#view-recall-no').prop('checked', false);
+                        } else if (response.recall === "no") {
+                            $('#view-recall-yes').prop('checked', false);
+                            $('#view-recall-no').prop('checked', true);
+                        } else {
+                            $('#view-recall-yes').prop('checked', false);
+                            $('#view-recall-no').prop('checked', false);
+                        }
+                        $('#view-fgparts').prop('checked', response.fgparts === "yes");
+                        if (response.shipment === "yes") {
+                            $('#view-shipment-yes').prop('checked', true);
+                            $('#view-shipment-no').prop('checked', false);
+                        } else if (response.shipment === "no") {
+                            $('#view-shipment-yes').prop('checked', false);
+                            $('#view-shipment-no').prop('checked', true);
+                        } else {
+                            $('#view-shipment-yes').prop('checked', false);
+                            $('#view-shipment-no').prop('checked', false);
+                        }
                         $('#view-location').text(response.location);
                         $('#view-ship_proc').text(response.ship_proc);
-                        $('#view-wip').text(response.wip);
                         $('#view-ship_sched').text(response.ship_sched);
-                        $('#view-stop_proc').text(response.stop_proc);
+                        $('#view-wip').prop('checked', response.wip === "yes");
+                        if (response.stop_proc === "yes") {
+                            $('#view-stop_proc-yes').prop('checked', true);
+                            $('#view-stop_proc-no').prop('checked', false);
+                        } else if (response.stop_proc === "no") {
+                            $('#view-stop_proc-yes').prop('checked', false);
+                            $('#view-stop_proc-no').prop('checked', true);
+                        } else {
+                            $('#view-stop_proc-yes').prop('checked', false);
+                            $('#view-stop_proc-no').prop('checked', false);
+                        }
 
                         // Adding FOMO data
                         $('#view-supplier').text(response.supplier);
@@ -958,13 +1071,15 @@ $result = $conn->query($query);
 
                                 if (fileType === "jpg" || fileType === "png" || fileType === "jpeg" || fileType === "gif") {
                                     // Image preview
-                                    fileLink = `<img src="${file.file_path}" class="img-thumbnail" style="max-width: 150px; margin: 5px;" />`;
+                                    fileLink = `<img src="${file.file_path}" class="img-thumbnail" style="max-width: 150px; margin: 5px; margin-bottom: 10px;" />`;
                                 } else {
                                     // Download link
-                                    fileLink = `<a href="${file.file_path}" download="${file.file_name}" class="btn btn-primary btn-sm">
-                                            <i class="fa fa-download"></i> Download ${file.file_name}
-                                        </a>`;
+                                    fileLink = `<a href="${file.file_path}" download="${file.file_name}" class="btn btn-primary btn-sm" 
+                style="margin-bottom: 10px;">
+                    <i class="fa fa-download"></i> Download ${file.file_name}
+                </a>`;
                                 }
+
 
                                 filesContainer.append(`<div>${fileLink}</div>`);
                             });
