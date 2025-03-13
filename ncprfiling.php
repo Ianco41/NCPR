@@ -1,0 +1,929 @@
+<?php
+    session_start();
+    if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "admin") {
+        header("Location: loginform.php");
+        exit();
+    }
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>admin Dashboard</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="fontawesome-free-6.7.2-web/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+    <style>
+        ::after,
+        ::before {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        h1 {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .wrapper {
+            display: flex;
+        }
+
+        .main {
+            min-height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            transition: all 0.35s ease-in-out;
+            background-color: #fafbfe;
+        }
+
+        #sidebar {
+            width: 70px;
+            min-width: 70px;
+            z-index: 1000;
+            transition: all .25s ease-in-out;
+            background-color: #0e2238;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #sidebar.expand {
+            width: 260px;
+            min-width: 260px;
+        }
+
+        .toggle-btn {
+            background-color: transparent;
+            cursor: pointer;
+            border: 0;
+            padding: 1rem 1.5rem;
+        }
+
+        .toggle-btn i {
+            font-size: 1.5rem;
+            color: #FFF;
+        }
+
+        .sidebar-logo {
+            margin: auto 0;
+        }
+
+        .sidebar-logo a {
+            color: #FFF;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        #sidebar:not(.expand) .sidebar-logo,
+        #sidebar:not(.expand) a.sidebar-link span {
+            display: none;
+        }
+
+        .sidebar-nav {
+            padding: 2rem 0;
+            flex: 1 1 auto;
+        }
+
+        a.sidebar-link {
+            padding: .625rem 1.5rem;
+            color: #FFF;
+            display: block;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-item, .sidebar-footer {
+            position: relative;
+        }
+
+        .sidebar-link i {
+            font-size: 1.2rem;
+            color: white;
+            margin-right: 10px;
+        }
+
+        a.sidebar-link:hover {
+            background-color: rgba(255, 255, 255, .075);
+            border-left: 3px solid #3b7ddd;
+        }
+
+        .sidebar-item {
+            position: relative;
+        }
+
+        #sidebar:not(.expand) .sidebar-link span {
+            display: none;
+            position: absolute;
+            left: 80px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #0e2238;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #sidebar:not(.expand) .sidebar-item:hover .sidebar-link span,
+        #sidebar:not(.expand) .sidebar-footer:hover .sidebar-link span {
+            display: block;
+        }
+
+        .sidebar-item, .sidebar-footer {
+            position: relative;
+        }
+        .sidebar-item.active a {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid #3b7ddd;
+            color: #3b7ddd;
+        }
+        .hover-shadow:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3) !important;
+            transform: translateY(-5px);
+            transition: all 0.3s ease-in-out;
+            background-color: #0e2238 !important;
+            color: white;
+        }
+    </style>
+    <body>
+        <div class="wrapper">
+            <aside id="sidebar">
+                <div class="d-flex">
+                    <button class="toggle-btn" type="button">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="sidebar-logo">
+                        <a href="#">LOGO</a>
+                    </div>
+                </div>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-item">
+                        <a href="admin_dashboard.php" class="sidebar-link">
+                        <i class="fa-solid fa-house"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item active">
+                        <a href="ncprfiling.php" class="sidebar-link">
+                        <i class="fa-regular fa-folder-open"></i>
+                            <span>NCPR Filing</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="ncprlist.php" class="sidebar-link">
+                        <i class="fa-regular fa-address-card"></i>
+                            <span>NCPR List</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="productkey.php" class="sidebar-link">
+                            <i class="fa-solid fa-helmet-safety"></i>
+                            <span>Product Key</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="status.php" class="sidebar-link">
+                            <i class="fa-solid fa-paperclip"></i>
+                            <span>Status</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="setting.php" class="sidebar-link">
+                            <i class="fa-solid fa-gear"></i>
+                            <span>Setting</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="sidebar-footer">
+                    <a href="logout.php" class="sidebar-link">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </aside>
+
+            <div class="main p-3">
+                <form id="ncprForm" method="POST" enctype="multipart/form-data">
+                    <div class="card border-0">
+                        <div class="card border p-2 mb-3 text-center">
+                            <h3 class="fw-bold mb-0">Non-Conforming Product Record</h3>
+                        </div>
+                            <div class="card">
+                                <div class="card-body mt-2">
+                                    <div class="row g-0">
+                                        <div class="col-md-9"> 
+                                            <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
+                                                <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                                    <input type="text" class="form-control" id="initiator" name="initiator" placeholder="Initiator" required>
+                                                    <label for="initiator">Initiator:</label>
+                                                </div>
+
+                                                <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                                    <input type="date" class="form-control" id="dateInput" name="date" placeholder="Enter a date" required>
+                                                    <label for="dateInput">Date/shift:</label>
+                                                </div>
+
+                                                <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                                    <input type="text" class="form-control" id="ncpr_num" name="ncpr_num" placeholder="Enter NCPR Number" readonly required>
+                                                    <label for="ncpr_num">NCPR Number:</label>
+                                                </div>
+                                            </div>
+    
+                                            <div class="d-flex flex-wrap gap-3 mb-1">
+                                                <div class="form-floating g-0 position-relative" style="flex: 1; min-width: 250px;">
+                                                    <input type="text" id="part_number" name="part_number" class="form-control" 
+                                                        style="padding-right: 40px;" required placeholder="Part Number">
+                                                    <label for="part_number">Part Number/Model Number:</label>
+
+                                                    <!-- Dropdown Button -->
+                                                    <button type="button" class="btn btn-light position-absolute" 
+                                                        style="right: 10px; top: 50%; transform: translateY(-50%); border: none; font-size: 18px;" 
+                                                        onclick="toggleDropdown()">▼</button>
+
+                                                    <!-- Dropdown List -->
+                                                    <ul id="dropdownList" class="list-group position-absolute bg-white border rounded" 
+                                                        style="display: none; top: 100%; left: 0; width: 100%; max-height: 150px; overflow-y: auto; z-index: 1000;">
+                                                        <?php
+                                                        include 'connection.php'; // Include your existing connection file
+
+                                                        // Fetch part numbers from the product_list table
+                                                        $sql = "SELECT part_number FROM product_list";
+                                                        $result = $conn->query($sql);
+
+                                                        if ($result->num_rows > 0) {
+                                                            while ($row = $result->fetch_assoc()) {
+                                                                echo "<li class='list-group-item' style='cursor: pointer;' onclick='selectValue(this)'>" . 
+                                                                    htmlspecialchars($row["part_number"]) . 
+                                                                    "</li>";
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </ul>
+                                                </div>
+
+                                                <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                                    <input type="text" class="form-control" id="part_name" name="part_name" placeholder="Enter Part Description" readonly required>
+                                                    <label>Part Description:</label>
+                                                </div>
+
+                                                <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                                    <input type="text" class="form-control" name="process" placeholder="Enter Part Description" required>
+                                                    <label>Process:</label>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-wrap gap-3 mb-1">
+                                                <div class="form-floating g-0" style="flex: 1; min-width: 250px; position: relative;">
+                                                    <div class="form-control d-flex align-items-center" style="height: 58px; padding-left: 12px;">
+                                                        <label for="supplierCheckbox" class="form-check-label">Include Supplier Details</label>
+                                                        <input type="checkbox" id="supplierCheckbox" class="form-check-input ms-2" onclick="toggleSupplierFields()">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="supplierSection" style="display: none;">
+                                                <div class="d-flex flex-wrap gap-3 mb-1">
+                                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                                        <input type="text" class="form-control" id="supplier_part_name" name="supplier_part_name" placeholder="Enter Supplier Part Name">
+                                                        <label>Supplier Part Name:</label>
+                                                    </div>
+
+                                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                                        <input type="text" class="form-control" name="invoice_num" placeholder="Enter Invoice Number">
+                                                        <label>Invoice Number:</label>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Second Row: Supplier, Supplier Part Number, Purchase Order -->
+                                                <div class="d-flex flex-wrap gap-3">
+                                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                                        <input type="text" class="form-control" name="supplier" placeholder="Enter Supplier">
+                                                        <label>Supplier:</label>
+                                                    </div>
+
+                                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                                        <input type="text" class="form-control" id="supplier_part_number" name="supplier_part_number" placeholder="Enter Supplier Part Number">
+                                                        <label>Supplier Part Number:</label>
+                                                    </div>
+
+                                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                                        <input type="text" class="form-control" name="purchase_order" placeholder="Enter Purchase Order">
+                                                        <label>Purchase Order:</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <!-- Right Box -->
+                                    <div class="col-md-3">
+                                        <div class="right-box p-5 border h-100 text-center">
+                                            <h3 style="color: red; font-weight: bold;">URGENT!</h3>
+                                            <span>Check the checkbox if the held parts is a potential OTD Miss Shipment.</span>
+                                            
+                                            <!-- Large Checkbox -->
+                                            <div class="mt-2">
+                                                <input type="checkbox" id="urgent" name="urgent" class="form-check-input" style="transform: scale(1.8);">
+                                                <label for="urgent" class="ms-2 fw-bold">Mark as Urgent</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                    <script>
+                                        function toggleDropdown() {
+                                            let dropdown = document.getElementById("dropdownList");
+                                            dropdown.classList.toggle("d-block");
+                                        }
+
+                                        function selectValue(element) {
+                                            let inputField = document.getElementById("part_number");
+                                            inputField.value = element.textContent;
+                                            document.getElementById("dropdownList").classList.remove("d-block");
+
+                                            // Manually trigger the input event to activate autofill logic
+                                            inputField.dispatchEvent(new Event("input"));
+                                        }
+
+                                        document.getElementById("part_number").addEventListener("input", function () {
+                                            let partNumber = this.value;
+
+                                            if (partNumber.length > 0) {
+                                                fetch("check_part.php?part_number=" + partNumber)
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        if (data.exists) {
+                                                            document.getElementById("part_name").value = data.part_name;
+                                                            document.getElementById("part_name").readOnly = true; // Lock if found
+                                                        } else {
+                                                            document.getElementById("part_name").value = "";
+                                                            document.getElementById("part_name").readOnly = false; // Allow input for new entry
+                                                        }
+                                                    })
+                                                    .catch(error => console.error("Error:", error));
+                                            } else {
+                                                document.getElementById("part_name").value = "";
+                                                document.getElementById("part_name").readOnly = false;
+                                            }
+                                        });
+
+                                        // Close dropdown when clicking outside
+                                        document.addEventListener("click", function (event) {
+                                            let dropdown = document.getElementById("dropdownList");
+                                            let container = document.querySelector(".position-relative"); // Use Bootstrap-based container
+                                            if (!container.contains(event.target)) {
+                                                dropdown.classList.remove("d-block");
+                                            }
+                                        });
+
+                                    </script>
+                                    <script>
+                                        // Set the current date as the default value
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            let today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+                                            document.getElementById("dateInput").value = today;
+                                        });
+                                    </script>
+
+                                    <!-- JavaScript to Toggle Fields -->
+                                    <script>
+                                        function toggleSupplierFields() {
+                                            let isChecked = document.getElementById("supplierCheckbox").checked;
+                                            let supplierSection = document.getElementById("supplierSection");
+
+                                            supplierSection.style.display = isChecked ? "block" : "none";
+                                        }
+                                    </script>
+                                    <table class="table table-bordered text-center align-middle" id="materialTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="font-size: 12px;">NT DJ Number</th>
+                                                <th style="font-size: 12px;">Material/NFLD Lot/Sublot No.</th>
+                                                <th style="font-size: 12px;">Lot/ Sublot Quantity</th>
+                                                <th style="font-size: 12px;">Quantity Affected</th>
+                                                <th style="font-size: 12px;">Defect Rate</th>
+                                                <th style="font-size: 12px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                            <tr>
+                                                <td><input type="text" class="form-control" name="ntdj_num[]" required></td>
+                                                <td><input type="text" class="form-control" name="mns_num[]" required></td>
+                                                <td><input type="number" class="form-control" name="lot_sublot_qty[]" required></td>
+                                                <td class="d-flex"><input type="number" class="form-control" name="qty_affected[]" required><input type="text" class="form-control" name="qty_affected_text[]" placeholder="Enter text"></td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input type="number" step="0.01" class="form-control" name="defect_rate[]" readonly required>
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </td>
+                                                <td><button type="button" class="btn btn-danger btn-sm remove-row" style="display: none;">Remove</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <button type="button" id="addRowBtn" class="btn btn-primary btn-sm">Add Material Detail</button>
+
+                                    <div class="row mt-3 border m-0">
+                                        <div class="col-md-3 border p-0">
+                                            <div class="form-floating">
+                                                <textarea id="issue" name="issue" class="form-control form-control-lg" placeholder="Issue call-out" style="height: 120px; overflow-y: hidden; width: 100%;"  required oninput="autoExpand(this)"></textarea>
+                                                <label for="issue" style="font-size: 12px; display: block; word-wrap: break-word; white-space: normal;">Issue call-out:</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 border p-1">
+                                            <div class="text-center p-0 m-0">
+                                                <span style="font-size: 10px">Issue in Detail</span>
+                                            </div>
+                                            <div class="row mb-1">
+                                                <div class="col-md-6">
+                                                    <div class="d-flex" style="align-items: baseline; width: fit-content;">
+                                                        <label for="awpi" class="form-label me-2" 
+                                                            style="font-size: 10px; white-space: nowrap; margin-bottom: 0;">
+                                                            AWPI:
+                                                        </label>
+                                                        <input type="text" id="awpi" name="awpi" class="form-control form-control" 
+                                                            style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 160px;" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="d-flex" style="align-items: baseline; width: fit-content;">
+                                                        <label for="dc" class="form-label me-2" style="font-size: 10px; white-space: nowrap; margin-bottom: 0;">DC:</label>
+                                                        <input type="text" id="dc" name="dc" class="form-control form-control" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 160px;" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row p-0 mb-1">
+                                                <div class="d-flex align-items-center">
+                                                    <label style="font-size: 10px; margin-right: 29px;">Deviation:</label>
+                                                    
+                                                    <input type="checkbox" id="deviation_yes" name="deviation" value="Yes" class="me-1">
+                                                    <label for="deviation_yes" class="me-2" style="font-size: 10px;">Yes</label>
+
+                                                    <input type="checkbox" id="deviation_no" name="deviation" value="No" class="me-1">
+                                                    <label for="deviation_no" style="font-size: 10px;">No</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="row p-0">
+                                                <div class="d-flex align-items-center">
+                                                    <label style="font-size: 10px; margin-right: 25px;">Repeating:</label>
+                                                    
+                                                    <input type="checkbox" id="repeating_yes" name="repeating" value="Yes" class="me-1">
+                                                    <label for="repeating_yes" class="me-2" style="font-size: 10px;">Yes</label>
+
+                                                    <input type="checkbox" id="repeating_no" name="repeating" value="No" class="me-1">
+                                                    <label for="repeating_no" style="font-size: 10px;">No</label>
+                                                </div>
+                                            </div>
+                                            <div class="row p-0">
+                                                <div class="d-flex" style="align-items: baseline; width: fit-content;">
+                                                    <label style="font-size: 10px; white-space: nowrap; margin-right: 30px;">Cavity:</label>
+                                                    <input type="text" name="cavity" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 350px;" required>
+                                                </div>
+                                            </div>
+                                            <div class="row p-0">
+                                                <div class="d-flex" style="align-items: baseline; width: fit-content;">
+                                                    <label style="font-size: 10px; white-space: nowrap; margin-right: 20px;">Machine:</label>
+                                                    <input type="text" name="machine" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 350px;" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 border p-0">
+                                            <div class="form-floating">
+                                                <textarea id="ref" name="ref" class="form-control form-control-lg" placeholder="Critical Doc Reference" style="height: 120px; overflow-y: hidden; width: 100%;" required oninput="autoExpand(this)"></textarea>
+                                                <label for="ref" style="font-size: 12px; display: block; word-wrap: break-word; white-space: normal;">Critical Doc Reference</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 border p-0">
+                                            <div class="form-floating">
+                                                <textarea id="bg" name="bg" class="form-control form-control-lg" placeholder="Critical Doc Reference" style="height: 120px; overflow-y: hidden; width: 100%;" required oninput="autoExpand(this)"></textarea>
+                                                <label for="bg" style="font-size: 12px; display: block; word-wrap: break-word; white-space: normal;">Issue background or information relevant in determining the root cause of the problem</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <script>
+                                        // Ensure only one checkbox is selected at a time
+                                        document.getElementById("deviation_yes").addEventListener("change", function() {
+                                            if (this.checked) {
+                                                document.getElementById("deviation_no").checked = false;
+                                            }
+                                        });
+
+                                        document.getElementById("deviation_no").addEventListener("change", function() {
+                                            if (this.checked) {
+                                                document.getElementById("deviation_yes").checked = false;
+                                            }
+                                        });
+                                    </script>
+
+                                    <script>
+                                        // Ensure only one checkbox is selected at a time
+                                        document.getElementById("repeating_yes").addEventListener("change", function() {
+                                            if (this.checked) {
+                                                document.getElementById("repeating_no").checked = false;
+                                            }
+                                        });
+
+                                        document.getElementById("repeating_no").addEventListener("change", function() {
+                                            if (this.checked) {
+                                                document.getElementById("repeating_yes").checked = false;
+                                            }
+                                        });
+                                    </script>
+                                    <div class="row mt-2 me-0 ms-0 mb-0">
+                                    <div class="col-md-6 border p-1">
+                                        <span style="font-size: 12px">
+                                            Immidiate containment action/s or countermeaseure/s taken (tick as many as appropriate)
+                                        </span>
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" id="one" name="one" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                            <label for="one" style="font-size: 12px;">1: Segregate affected part/s - write custodian of the segregated parts</label>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" id="one_one" name="one_one" value="yes" style="transform: scale(1); margin-right: 5px;" class="ms-4">
+                                            <label for="one_one" style="font-size: 12px;" >1.1: At Hotpress: Put on hold inventory of affected lay-up materials together with the parts</label><br>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" id="two" name="two" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                            <label for="two" style="font-size: 12px;">2: Yield off/ 100% inspection. INSPECTION RESULTS:</label>
+                                            <input type="text" id="two_one" name="two_one" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 283px;">
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" id="three" name="three" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                            <label for="three" style="font-size: 12px;">3: Call the attention of QAE/PE/EE/TECH/CHIEF:</label>
+                                            <input type="text" id="three_one" name="three_one" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 313px;">
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" id="four" name="four" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                            <label for="four" style="font-size: 12px;">4: Attach On-hold Tag and put in On-Hold cage/area</label>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" id="five" name="five" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                            <label for="five" style="font-size: 12px;">5: Check MCS stock for similar Lot Number/AWPI/DC and request to file NCPR</label>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" id="six" name="six" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                            <label for="six" style="font-size: 12px;">6: Attach copy of OCAP if available, and/or other log forms as part of the containment action</label>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <label for="seven" style="font-size: 12px; margin-right: 10px" class="ms-5">7: File Shutdown Record</label>
+
+                                            <input type="checkbox" id="seven-yes" name="seven" value="yes" style="transform: scale(1); margin-right: 5px;" onclick="toggleCheckbox(this)">
+                                            <label for="seven-yes" style="font-size: 12px; margin-right: 10px">Yes</label>
+
+                                            <input type="checkbox" id="seven-no" name="seven" value="no" style="transform: scale(1); margin-right: 5px;" onclick="toggleCheckbox(this)">
+                                            <label for="seven-no" style="font-size: 12px; margin-right: 10px">No</label>
+
+                                            <script>
+                                            function toggleCheckbox(selected) {
+                                                document.querySelectorAll('input[name="seven"]').forEach(checkbox => {
+                                                    if (checkbox !== selected) {
+                                                        checkbox.checked = false;
+                                                    }
+                                                });
+                                            }
+                                            </script>
+
+
+                                            <label for="seven_one" style="font-size: 12px;">WHO:</label>
+                                            <input type="text" id="seven_one" name="seven_one" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 98px;">
+
+                                            <label for="seven_two" style="font-size: 12px;" class="ms-3">TIME/SHIFT:</label>
+                                            <input type="text" id="seven_two" name="seven_two" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 98px;">
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" id="eight" name="eight" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                            <label for="eight" style="font-size: 12px;">8: Others (please specify):</label>
+                                            <input type="text" id="eight_one" name="eight_one" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 435px;">
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" id="nine" name="nine" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                            <label for="nine" style="font-size: 12px;">9: Find affected WIP, FG & raw materials - specify DJ/s and LN/s</label>
+                                            <input type="text" id="nine_one" name="nine_one" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 230px;"><br>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 border p-2">
+                                        <div class="d-flex align-items-center">
+                                            <label style="font-size: 15px;" >Product Recall:</label>
+                                            <input type="checkbox" id="recall_yes" name="recall" value="yes" style="transform: scale(1); margin-right: 5px;" class="ms-5">
+                                            <label for="recall_yes" style="font-size: 15px;" class="me-2">Yes</label>
+                                            <input type="checkbox" id="recall_no" name="recall" value="no" style="transform: scale(1); margin-right: 5px;">
+                                            <label for="recall_no" style="font-size: 15px;">No</label><br>
+                                        </div>   
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="fgparts" name="fgparts" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="fgparts" style="font-size: 15px;">FG Parts:</label>
+                                        <label style="font-size: 15px; margin-left:200px">Cancel Shipment:</label>
+                                        <input type="checkbox" id="shipment_yes" name="shipment" value="yes" style="transform: scale(1); margin-right: 5px;" class="ms-5">
+                                        <label for="shipment_yes" style="font-size: 15px;">Yes</label>
+                                        <input type="checkbox" id="shipment_no" name="shipment" value="no" style="transform: scale(1); margin-right: 5px;" class="ms-2">
+                                        <label for="shipment_no" style="font-size: 15px;">No</label><br>
+                                    </div>      
+                                    <div class="d-flex flex-column mb-1">
+                                        <label for="ship_sched" style="font-size: 15px;">SHIPMENT SCHEDULE's / Quantity:</label>
+                                        <input type="text" id="ship_sched" name="ship_sched" 
+                                            style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; 
+                                            padding: 5px; height: auto; font-size: 12px; width: 100%; max-width: 600px;">
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="wip" name="wip" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="wip" style="font-size: 15px;">WIP:</label> 
+                                        <label style="font-size: 15px; margin-left:230px">Stop Process:</label>
+                                        <input type="checkbox" id="stop_proc_yes" name="stop_proc" value="yes" style="transform: scale(1); margin-right: 5px;" class="ms-5">
+                                        <label for="stop_proc_yes" style="font-size: 15px;">Yes</label>
+                                        <input type="checkbox" id="stop_proc_no" name="stop_proc" value="no" style="transform: scale(1); margin-right: 5px;" class="ms-2">
+                                        <label for="stop_proc_no" style="font-size: 15px;">No</label><br>
+                                    </div> 
+
+                                        <script>
+                                            function enforceSingleCheckbox(groupName) {
+                                                document.querySelectorAll(`input[name="${groupName}"]`).forEach(checkbox => {
+                                                    checkbox.addEventListener("change", function() {
+                                                        if (this.checked) {
+                                                            document.querySelectorAll(`input[name="${groupName}"]`).forEach(cb => {
+                                                                if (cb !== this) cb.checked = false;
+                                                            });
+                                                        }
+                                                    });
+                                                });
+                                            }
+                                            
+                                            enforceSingleCheckbox("recall");
+                                            enforceSingleCheckbox("shipment");
+                                            enforceSingleCheckbox("stop_proc");
+                                        </script>
+                                        <div class="d-flex align-items-center">
+                                        <label for="location" style="font-size: 15px;">Locations:</label>
+                                        <input type="text" id="location" name="location" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; 
+                                            padding: 5px; height: auto; font-size: 12px; width: 100%; max-width: 550px;">
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="mcs" name="mcs" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="mcs" style="font-size: 15px;">MCS:</label>
+                                        
+
+                                        <label for="mcs_details" style="font-size: 15px;">MCS Details:</label>
+                                        <input type="text" id="mcs_details" name="mcs_details" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; 
+                                            padding: 5px; height: auto; font-size: 12px; width: 100%; max-width: 438px;">
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="customer_notif" name="customer_notif" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="customer_notif" style="font-size: 15px;">Customer notification if non-conforming products have been shipped.</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mt-3 p-3">
+                                    <div class="card-title text-center">
+                                        <span class="fs-3">Optional attachment</span><br>
+                                        <span class="fs-8">Evidence documents</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Image Preview Box -->
+                                        <div class="d-flex flex-column">
+                                            <div class="d-flex justify-content-center">
+                                                <div id="imagePreviewContainer" 
+                                                    style="display: none; width: 800px; height: 220px; border: 2px dashed #ccc; 
+                                                            padding: 10px; display: flex; justify-content: center; align-items: center; margin-top: 10px;">
+                                                    <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; max-height: 100%; display: none;">
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex align-items-center gap-2 border p-2 mt-2 mb-2">
+                                                <label for="image" class="mb-0">Choose an Image to Upload from Your Device:</label>
+                                                <input type="file" name="image_name" id="image" accept="image/*" onchange="previewImage(event)">
+                                            </div>
+
+                                        <script>
+                                        function previewImage(event) {
+                                            var image = document.getElementById('imagePreview');
+                                            var container = document.getElementById('imagePreviewContainer');
+                                            var file = event.target.files[0];
+
+                                            if (file) {
+                                                var reader = new FileReader();
+                                                reader.onload = function(e) {
+                                                    image.src = e.target.result;
+                                                    image.style.display = "block"; // Show the image
+                                                    container.style.display = "flex"; // Show the preview box
+                                                }
+                                                reader.readAsDataURL(file);
+                                            }
+                                        }
+                                        </script>
+                                        <div id="file-container" class="d-flex flex-column gap-2">
+                                            <div class="d-flex align-items-center gap-2 mb-2 mt-2 p-2 border">
+                                                <label for="excel">Upload Excel File:</label>
+                                                <input type="file" name="excel_name[]" id="excel" accept=".xls,.xlsx" multiple>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <script>
+                                            function addExcelInput() {
+                                                let container = document.getElementById("file-container");
+
+                                                let newDiv = document.createElement("div");
+                                                newDiv.classList.add("d-flex", "align-items-center", "gap-2", "mb-2", "mt-2", "p-2", "border");
+
+                                                let newLabel = document.createElement("label");
+                                                newLabel.textContent = "Upload Excel File:";
+
+                                                let newInput = document.createElement("input");
+                                                newInput.type = "file";
+                                                newInput.name = "excel_name[]"; // Use array notation
+                                                newInput.accept = ".xls,.xlsx";
+
+                                                let removeButton = document.createElement("button");
+                                                removeButton.type = "button";
+                                                removeButton.classList.add("btn", "btn-danger");
+                                                removeButton.textContent = "Remove";
+                                                removeButton.onclick = function() { removeInput(removeButton); };
+
+                                                newDiv.appendChild(newLabel);
+                                                newDiv.appendChild(newInput);
+                                                newDiv.appendChild(removeButton);
+                                                container.appendChild(newDiv);
+                                            }
+
+
+                                            function removeInput(button) {
+                                                button.parentElement.remove();
+                                            }
+                                        </script>
+                        
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="addExcelInput()">Add Another Excel File</button>
+                                </div>
+                                    <button type="submit" class="btn btn-success  w-50 mx-auto d-block">
+                                        <i class="fas fa-paper-plane"></i> Submit
+                                    </button>
+                                </div>        
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script>
+            document.getElementById("addRowBtn").addEventListener("click", function() {
+                var table = document.getElementById("materialTable").getElementsByTagName("tbody")[0];
+                var newRow = document.createElement("tr");
+
+                newRow.innerHTML = `
+                    <td><input type="text" class="form-control" name="ntdj_num[]" required></td>
+                    <td><input type="text" class="form-control" name="mns_num[]" required></td>
+                    <td><input type="number" class="form-control" name="lot_sublot_qty[]" required></td>
+                    <td class="d-flex"><input type="number" class="form-control" name="qty_affected[]" required> <input type="text" class="form-control" name="qty_affected_text[]" placeholder="Enter text"></td>
+                    <td>
+                        <div class="input-group">
+                            <input type="number" step="0.01" class="form-control" name="defect_rate[]" readonly required>
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </td>
+                    <td><button type="button" class="btn btn-danger btn-sm remove-row">Remove</button></td>
+                `;
+
+                table.appendChild(newRow);
+
+                // Call function to enable defect rate calculation for this row
+                calculateDefectRate(newRow);
+            });
+
+            // Remove row functionality
+            document.addEventListener("click", function(event) {
+                if (event.target.classList.contains("remove-row")) {
+                    event.target.closest("tr").remove();
+                }
+            });
+
+            // Function to calculate defect rate for a row
+            function calculateDefectRate(row) {
+                let lotQty = row.querySelector('[name="lot_sublot_qty[]"]');
+                let qtyAffected = row.querySelector('[name="qty_affected[]"]');
+                let defectRate = row.querySelector('[name="defect_rate[]"]');
+
+                function updateDefectRate() {
+                    let lotValue = parseFloat(lotQty.value) || 0;
+                    let affectedValue = parseFloat(qtyAffected.value) || 0;
+                    if (lotValue > 0) {
+                        defectRate.value = ((affectedValue / lotValue) * 100).toFixed(2);
+                    } else {
+                        defectRate.value = "";
+                    }
+                }
+
+                lotQty.addEventListener("input", updateDefectRate);
+                qtyAffected.addEventListener("input", updateDefectRate);
+            }
+
+            // Apply defect rate calculation for existing rows on page load
+            document.querySelectorAll("#materialTable tbody tr").forEach(row => {
+                calculateDefectRate(row);
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                fetch('insert.php?get_ncpr=1')  // Now, this requests the next ncpr_num
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            document.getElementById("ncpr_num").value = data.ncpr_num;
+                        } else {
+                            console.error("Error fetching ncpr_num:", data.message);
+                        }
+                    })
+                    .catch(error => console.error("Fetch error:", error));
+            });
+
+            const hamBurger = document.querySelector(".toggle-btn");
+
+            hamBurger.addEventListener("click", function () {
+            document.querySelector("#sidebar").classList.toggle("expand");
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            });
+
+            document.getElementById("ncprForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    let formData = new FormData(this); // Get form data
+    let originalNcprNum = document.getElementById("ncpr_num").value; // Store original ncpr_num
+
+    fetch("insert.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            if (data.new_ncpr_num && data.new_ncpr_num !== originalNcprNum) {
+                // Notify user that the NCPR number has changed
+                Swal.fire({
+                    title: "Notice!",
+                    text: "Your NCPR number has been updated to " + data.new_ncpr_num + " because the previous number was taken.",
+                    icon: "info",
+                    confirmButtonText: "OK"
+                }).then(() => {
+                    document.getElementById("ncpr_num").value = data.new_ncpr_num; // Update field
+                    window.location.href = "ncprfiling.php"; // Redirect after acknowledging
+                });
+            } else {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Data successfully inserted!",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                }).then(() => {
+                    window.location.href = "ncprfiling.php"; // Redirect after clicking OK
+                });
+            }
+        } else {
+            Swal.fire({
+                title: "Error!",
+                text: data.message,
+                icon: "error",
+                confirmButtonText: "OK"
+            });
+        }
+    })
+    .catch(error => {
+        console.error("Fetch error:", error);
+        Swal.fire({
+            title: "Error!",
+            text: "An unexpected error occurred.",
+            icon: "error",
+            confirmButtonText: "OK"
+        });
+    });
+});
+
+
+        function autoExpand(textarea) {
+            textarea.style.height = "auto"; // Reset height
+            textarea.style.height = textarea.scrollHeight + "px"; // Set new height
+        }
+
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
