@@ -951,7 +951,7 @@
                                 confirmButtonText: "OK"
                             }).then(() => {
                                 document.getElementById("ncpr_num").value = data.new_ncpr_num; // Update field
-                                window.location.href = "ncprfiling.php"; // Redirect after acknowledging
+                                window.location.href = "guest_ncprfiling.php"; // Redirect after acknowledging
                             });
                         } else {
                             Swal.fire({
@@ -960,7 +960,7 @@
                                 icon: "success",
                                 confirmButtonText: "OK"
                             }).then(() => {
-                                window.location.href = "ncprfiling.php"; // Redirect after clicking OK
+                                window.location.href = "guest_ncprfiling.php"; // Redirect after clicking OK
                             });
                         }
                     } else {
