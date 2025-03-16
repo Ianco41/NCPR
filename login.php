@@ -11,7 +11,7 @@ $response = ["status" => "error", "message" => "Invalid request."];
 if (isset($_POST["guest"])) {
     $_SESSION["user"] = "Guest";
     $_SESSION["role"] = "guest";
-    echo json_encode(["status" => "success", "message" => "Guest have successfully logged in.", "redirect" => "guest_dashboard.php"]);
+    echo json_encode(["status" => "success", "message" => "Guest have successfully logged in.", "redirect" => "guest_ncprfiling.php"]);
     exit();
 }
 
