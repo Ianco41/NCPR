@@ -116,6 +116,27 @@
     </div>
 
     <script>
+        $.ajax({
+            type: "POST",
+            url: "login.php",
+            data: {
+                username: username,
+                password: password
+            },
+            success: function(response) {
+                console.log("Response from server:", response); // Logs server's JSON response
+                var data = JSON.parse(response);
+                if (data.status === "success") {
+                    window.location.href = data.redirect; // Redirect on success
+                } else {
+                    alert(data.message); // Show error message
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("Error:", error); // Log any AJAX error
+            }
+        });
+
         $(document).ready(function() {
             $("#resetPasswordForm").on("submit", function(e) {
                 e.preventDefault();
