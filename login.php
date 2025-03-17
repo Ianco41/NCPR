@@ -46,8 +46,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     }
 
-    // Prepare query to fetch user details
-    $stmt = $conn->prepare("SELECT u.password, r.role_name FROM users u JOIN users_roles ur ON u.id = ur.user_id JOIN roles r ON ur.role_id = r.id WHERE u.username = ?");
+    // Prepare query to fetch user details and role
+    $stmt = $conn->prepare("SELECT users.password, users_roles.name 
+FROM users 
+JOIN users_roles ON users.role_id = users_roles.id 
+WHERE users.username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
@@ -66,9 +69,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION["user"] = $username;
         $_SESSION["role"] = $role_name;
 
-        if ($role_name === "admin") {
+        if ($role_name === "ADMIN" || $role_name === "STAFF") {
             echo json_encode(["status" => "success", "message" => "Admin has successfully logged in.", "redirect" => "admin_dashboard.php"]);
-        } else if ($role_name === "superadmin") {
+        } else if ($role_name === "SUPERADMIN") {
             echo json_encode(["status" => "success", "message" => "Superadmin has successfully logged in.", "redirect" => "superadmin_dashboard.php"]);
         } else {
             echo json_encode(["status" => "error", "message" => "Unauthorized role."]);
