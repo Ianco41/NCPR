@@ -1,9 +1,9 @@
 <?php
     session_start();
-    if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "superadmin") {
+    /*if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "superadmin") {
         header("Location: loginform.php");
         exit();
-    }
+    }*/
 ?>
 <!DOCTYPE html>
 <html lang="en">

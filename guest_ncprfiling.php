@@ -1,13 +1,17 @@
+<?php
+session_start();
+$name = $_SESSION["user"];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <title>NCPR FILING - GUEST</title>
     <!-- Bootstrap CSS (CDN) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
-<!-- Font Awesome (CDN) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- Font Awesome (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="fontawesome-free-6.7.2-web/css/all.min.css">
@@ -166,6 +170,18 @@
         background-color: #0e2238 !important;
         color: white;
     }
+
+    /* Hide the default spinner buttons on number input */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+        /* For Firefox */
+    }
 </style>
 
 <body>
@@ -176,7 +192,7 @@
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 <div class="sidebar-logo">
-                    <a href="#">LOGO</a>
+                    <a href="#"><?php echo $name?></a>
                 </div>
             </div>
             <ul class="sidebar-nav">
@@ -236,7 +252,7 @@
                                     <div class="d-flex flex-wrap gap-3 mb-1">
                                         <div class="form-floating g-0 position-relative" style="flex: 1; min-width: 250px;">
                                             <input type="text" id="part_number" name="part_number" class="form-control"
-                                                style="padding-right: 40px;" placeholder="Part Number">
+                                                style="padding-right: 40px;" placeholder="Part Number" onkeyup="liveSearch()" autocomplete="off">
                                             <label for="part_number">Part Number/Model Number:</label>
 
                                             <!-- Dropdown Button -->
@@ -273,6 +289,31 @@
                                             </ul>
                                         </div>
                                         <script>
+                                            function liveSearch() {
+                                                let input = document.getElementById("part_number").value;
+                                                let dropdown = document.getElementById("dropdownList");
+
+                                                if (input.length === 0) {
+                                                    dropdown.style.display = "none";
+                                                    return;
+                                                }
+
+                                                let xhr = new XMLHttpRequest();
+                                                xhr.onreadystatechange = function() {
+                                                    if (xhr.readyState === 4 && xhr.status === 200) {
+                                                        dropdown.innerHTML = xhr.responseText;
+                                                        dropdown.style.display = "block";
+                                                    }
+                                                };
+                                                xhr.open("GET", "fetch_part_numbers.php?query=" + encodeURIComponent(input), true);
+                                                xhr.send();
+                                            }
+
+                                            function selectValue(element) {
+                                                document.getElementById("part_number").value = element.textContent;
+                                                document.getElementById("dropdownList").style.display = "none";
+                                            }
+
                                             function fetchSuggestions(query) {
                                                 let suggestionsList = document.getElementById("suggestionsList");
 

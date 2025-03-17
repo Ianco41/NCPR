@@ -8,6 +8,7 @@ header("Content-Type: application/json"); // Set response type to JSON
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["action"] === "change_password") {
     $userId = isset($_POST["userId"]) ? intval($_POST["userId"]) : 0;
     $newPassword = trim($_POST["newPassword"] ?? "");
+    
 
     if ($userId <= 0 || empty($newPassword)) {
         echo json_encode(["status" => "error", "message" => "User ID and new password are required."]);
@@ -15,10 +16,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["
     }
 
     // Enforce password policy (e.g., min 8 chars, 1 uppercase, 1 number, 1 special character)
-    if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/', $newPassword)) {
+    /*if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/', $newPassword)) {
         echo json_encode(["status" => "error", "message" => "Password must be at least 8 characters, include 1 uppercase letter, 1 number, and 1 special character."]);
         exit;
-    }
+    }*/
 
     // Hash the new password securely
     $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);

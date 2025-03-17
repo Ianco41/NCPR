@@ -1,74 +1,56 @@
 <?php
 ob_start();
 session_start();
-require_once "connection.php"; // Ensure database connection
+require "connection.php"; // Database connection
 
-header("Content-Type: application/json"); // Set response type to JSON
+header("Content-Type: application/json");
 
-$response = ["status" => "error", "message" => "Invalid request."];
+try {
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["action"] === "register_user") {
+        $username = trim($_POST["username"] ?? "");
+        $password = trim($_POST["password"] ?? "");
+        $role_id  = intval($_POST["role"] ?? 0);
 
-// Handle Fetching User Accounts (For AJAX)
-if ($_SERVER["REQUEST_METHOD"] === "GET") {
-    try {
-        $result = $conn->query("SELECT id, username, role FROM users ORDER BY id ASC");
-
-        $accounts = [];
-        while ($row = $result->fetch_assoc()) {
-            $accounts[] = $row;
+        // Check for empty fields
+        if (empty($username) || empty($password) || empty($role_id)) {
+            echo json_encode(["status" => "error", "message" => "All fields are required."]);
+            exit;
         }
 
-        echo json_encode($accounts);
-        exit;
-    } catch (Exception $e) {
-        echo json_encode(["error" => $e->getMessage()]);
-        exit;
-    }
-}
+        // Validate role existence
+        $stmt = $pdo->prepare("SELECT id FROM users_roles WHERE id = ?");
+        $stmt->execute([$role_id]);
+        if ($stmt->rowCount() === 0) {
+            echo json_encode(["status" => "error", "message" => "Invalid role selected."]);
+            exit;
+        }
 
-// Handle Adding a New User (For Form Submission)
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["action"] === "add_user") {
-    $username = trim($_POST["username"] ?? "");
-    $password = trim($_POST["password"] ?? "");
-    $role = trim($_POST["role"] ?? "");
-
-    // Basic validation
-    if (empty($username) || empty($password) || empty($role)) {
-        echo json_encode(["status" => "error", "message" => "All fields are required."]);
-        exit;
-    }
-
-    // Hash password
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    try {
         // Check if username already exists
-        $stmt = $conn->prepare("SELECT username FROM users WHERE username = ?");
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        if ($stmt->rowCount() > 0) {
             echo json_encode(["status" => "error", "message" => "Username already exists."]);
-            exit();
+            exit;
         }
-        $stmt->close();
 
-        // Insert new user
-        $stmt = $conn->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $username, $hashedPassword, $role);
+        // Hash password securely
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        if ($stmt->execute()) {
-            echo json_encode(["status" => "success", "message" => "Account successfully created!", "redirect" => "SuperAdmin_dashboard.php"]);
+        // Insert new user with role_id
+        $stmt = $pdo->prepare("INSERT INTO users (username, password, role_id) VALUES (?, ?, ?)");
+        if ($stmt->execute([$username, $hashedPassword, $role_id])) {
+            echo json_encode(["status" => "success", "message" => "Account created successfully!", "redirect" => "Setting_SAdmin.php"]);
         } else {
             echo json_encode(["status" => "error", "message" => "Failed to create account."]);
         }
-
-        $stmt->close();
-        $conn->close();
-    } catch (Exception $e) {
-        echo json_encode(["status" => "error", "message" => "Error: " . $e->getMessage()]);
+    } elseif ($_SERVER["REQUEST_METHOD"] === "GET") {
+        // Fetch all user accounts
+        $stmt = $pdo->query("SELECT users.id, users.username, users_roles.name AS role FROM users JOIN users_roles ON users.role_id = users_roles.id");
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($users);
     }
+} catch (Exception $e) {
+    echo json_encode(["status" => "error", "message" => "Server error: " . $e->getMessage()]);
 }
 
 ob_end_flush();
-?>

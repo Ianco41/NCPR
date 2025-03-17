@@ -1,9 +1,5 @@
 <?php
 session_start();
-if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "admin") {
-    header("Location: login.php");
-    exit();
-}
 
 
 // Include your database connection file
@@ -644,261 +640,328 @@ $result = $conn->query($query);
                 </div>
                 <div class="modal-body">
                     <form id="editForm">
-                        <div class="row g-0">
-                            <div class="col-md-9">
-                                <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
-                                        <input type="hidden" id="edit-id" name="id">
-                                        <input type="text" class="form-control" id="edit-initiator" name="initiator">
-                                        <label class="form-label">Initiator</label>
+                        <div class="position-relative">
+                            <div class="row g-0">
+                                <div class="col-md-9">
+                                    <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
+                                        <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                            <input type="hidden" id="edit-id" name="id">
+                                            <input type="text" class="form-control" id="edit-initiator" name="initiator">
+                                            <label class="form-label">Initiator</label>
+                                        </div>
+                                        <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                            <input type="text" class="form-control" id="edit-ncpr-num" name="ncpr_num">
+                                            <label class="form-label">NCPR Number</label>
+                                        </div>
+                                        <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                            <input type="date" class="form-control" id="edit-date" name="date">
+                                            <label class="form-label">Date</label>
+                                        </div>
                                     </div>
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
-                                        <input type="text" class="form-control" id="edit-ncpr-num" name="ncpr_num">
-                                        <label class="form-label">NCPR Number</label>
+                                    <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
+                                        <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                            <input type="text" class="form-control" id="edit-part-number" name="part_number">
+                                            <label class="form-label">Part Number</label>
+                                        </div>
+                                        <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                            <input type="text" class="form-control" id="edit-part-name" name="part_name">
+                                            <label class="form-label">Part Name</label>
+                                        </div>
+                                        <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                            <input type="text" class="form-control" id="edit-process" name="process">
+                                            <label class="form-label">Process</label>
+                                        </div>
                                     </div>
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
-                                        <input type="date" class="form-control" id="edit-date" name="date">
-                                        <label class="form-label">Date</label>
+                                    <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
+                                        <div class="col-md-4 border p-2">
+                                            <span class="d-block" style="font-size: 15px"><strong>FOR ON HOLD MATERIAL ONLY</strong></span>
+                                        </div>
+                                        <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                            <input type="text" class="form-control" id="edit-supplier-part-name" name="supplier_part_name">
+                                            <label class="form-label">Supplier Part Name</label>
+                                        </div>
+                                        <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                            <input type="text" class="form-control" id="edit-supplier-part-number" name="supplier_part_number">
+                                            <label class="form-label">Supplier Part Number</label>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
+                                        <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                            <input type="text" class="form-control" id="edit-supplier" name="supplier">
+                                            <label class="form-label">Supplier</label>
+                                        </div>
+                                        <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                            <input type="text" class="form-control" id="edit-invoice-num" name="invoice_num">
+                                            <label class="form-label">Invoice Number</label>
+                                        </div>
+                                        <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
+                                            <input type="text" class="form-control" id="edit-purchase-order" name="purchase_order">
+                                            <label class="form-label">Purchase Order</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
 
-                                        <input type="text" class="form-control" id="edit-part-number" name="part_number">
-                                        <label class="form-label">Part Number</label>
-                                    </div>
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
-                                        <input type="text" class="form-control" id="edit-part-name" name="part_name">
-                                        <label class="form-label">Part Name</label>
-
-                                    </div>
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
-
-                                        <input type="text" class="form-control" id="edit-process" name="process">
-                                        <label class="form-label">Process</label>
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
-                                        <input type="text" class="form-control" id="edit-onhold" name="process">
-                                        <label class="form-label">On hold Material</label>
-                                    </div>
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
-
-                                        <input type="text" class="form-control" id="edit-supplier-part-name" name="supplier_part_name">
-                                        <label class="form-label">Supplier Part Name</label>
-                                    </div>
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
-
-                                        <input type="text" class="form-control" id="edit-supplier-part-number" name="supplier_part_number">
-                                        <label class="form-label">Supplier Part Number</label>
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-wrap gap-3 mb-1 g-0 m-0 p-0">
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
-                                        <input type="text" class="form-control" id="edit-supplier" name="process">
-                                        <label class="form-label">Supplier</label>
-                                    </div>
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
-
-                                        <input type="text" class="form-control" id="edit-invoice-num" name="supplier_part_name">
-                                        <label class="form-label">Supplier Part Name</label>
-                                    </div>
-                                    <div class="form-floating g-0" style="flex: 1; min-width: 250px;">
-
-                                        <input type="text" class="form-control" id="edit-purchase-order" name="supplier_part_number">
-                                        <label class="form-label">Supplier Part Number</label>
+                                <!-- Right Box (Aligned to the right and same height) -->
+                                <div class="col-md-3 d-flex flex-column align-self-stretch">
+                                    <div class="right-box p-4 border text-center h-100 d-flex flex-column justify-content-center">
+                                        <h3 style="color: red; font-weight: bold;">URGENT!</h3>
+                                        <span>Check the checkbox if the held parts is a potential OTD Miss Shipment.</span>
+                                        <div class="mt-2">
+                                            <input type="checkbox" id="edit-urgent-checkbox" name="urgent" class="form-check-input" style="transform: scale(1.8);">
+                                            <label for="view-urgent-checkbox" class="ms-2 fw-bold">Mark as Urgent</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <table class="table table-bordered" id="edit-material-table">
+                                <thead>
+                                    <tr>
+                                        <th>Material ID</th>
+                                        <th>NTDJ Number</th>
+                                        <th>MNS Number</th>
+                                        <th>Lot/Sublot Quantity</th>
+                                        <th>Quantity Affected</th>
+                                        <th>Defect Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Material data will be inserted here dynamically -->
+                                </tbody>
+                            </table>
+                            <div class="row mt-2 me-0 ms-0 mb-0">
+                                <div class="col-md-6 border p-1">
+                                    <span style="font-size: 12px">
+                                        Immidiate containment action/s or countermeaseure/s taken (tick as many as appropriate)
+                                    </span>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-one" name="one" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="one" style="font-size: 12px;">1: Segregate affected part/s - write custodian of the segregated parts</label>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-one_one" name="one_one" value="yes" style="transform: scale(1); margin-right: 5px;" class="ms-4">
+                                        <label for="one_one" style="font-size: 12px;">1.1: At Hotpress: Put on hold inventory of affected lay-up materials together with the parts</label><br>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-two" name="two" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="two" style="font-size: 12px;">2: Yield off/ 100% inspection. INSPECTION RESULTS:</label>
+                                        <input type="text" id="edit-two_one" name="two_one" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 227px;">
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-three" name="three" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="three" style="font-size: 12px;">3: Call the attention of QAE/PE/EE/TECH/CHIEF:</label>
+                                        <input type="text" id="edit-three_one" name="three_one" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 250px;">
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-four" name="four" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="four" style="font-size: 12px;">4: Attach On-hold Tag and put in On-Hold cage/area</label>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-five" name="five" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="five" style="font-size: 12px;">5: Check MCS stock for similar Lot Number/AWPI/DC and request to file NCPR</label>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-six" name="six" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="six" style="font-size: 12px;">6: Attach copy of OCAP if available, and/or other log forms as part of the containment action</label>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <label for="seven" style="font-size: 12px; margin-right: 10px" class="ms-5">7: File Shutdown Record</label>
+
+                                        <input type="checkbox" id="seven-yes" name="seven" value="yes" style="transform: scale(1); margin-right: 5px;" onclick="toggleCheckbox(this)">
+                                        <label for="seven-yes" style="font-size: 12px; margin-right: 10px">Yes</label>
+
+                                        <input type="checkbox" id="seven-no" name="seven" value="no" style="transform: scale(1); margin-right: 5px;" onclick="toggleCheckbox(this)">
+                                        <label for="seven-no" style="font-size: 12px; margin-right: 10px">No</label>
+
+                                        <label for="seven_one" style="font-size: 12px;">WHO:</label>
+                                        <input type="text" id="edit-seven_one" name="seven_one" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 70px;">
+
+                                        <label for="seven_two" style="font-size: 12px;" class="ms-3">TIME/SHIFT:</label>
+                                        <input type="text" id="edit-seven_two" name="seven_two" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 70px;">
+                                    </div>
+                                    <script>
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            const yesCheckbox = document.getElementById("seven-yes");
+                                            const noCheckbox = document.getElementById("seven-no");
+
+                                            yesCheckbox.addEventListener("change", function() {
+                                                if (this.checked) {
+                                                    noCheckbox.checked = false;
+                                                }
+                                            });
+
+                                            noCheckbox.addEventListener("change", function() {
+                                                if (this.checked) {
+                                                    yesCheckbox.checked = false;
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-eight" name="eight" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="eight" style="font-size: 12px;">8: Others (please specify):</label>
+                                        <input type="text" id="edit-eight_one" name="eight_one" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 330px;">
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-nine" name="nine" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="nine" style="font-size: 12px;">9: Find affected WIP, FG & raw materials - specify DJ/s and LN/s</label>
+                                        <input type="text" id="edit-nine_one" name="nine_one" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; padding: 0; height: auto; font-size: 10px; width: 180px;">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 border p-2">
+                                    <div class="d-flex align-items-center">
+                                        <label style="font-size: 15px;">Product Recall:</label>
+                                        <input type="checkbox" id="recall_yes" name="recall" value="yes" style="transform: scale(1); margin-right: 5px;" class="ms-5">
+                                        <label for="recall_yes" style="font-size: 15px;" class="me-2">Yes</label>
+                                        <input type="checkbox" id="recall_no" name="recall" value="no" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="recall_no" style="font-size: 15px;">No</label><br>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-fgparts" name="fgparts" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="fgparts" style="font-size: 15px;">FG Parts:</label>
+                                        <label style="font-size: 15px; margin-left:200px">Cancel Shipment:</label>
+                                        <input type="checkbox" id="shipment_yes" name="shipment" value="yes" style="transform: scale(1); margin-right: 5px;" class="ms-5">
+                                        <label for="shipment_yes" style="font-size: 15px;">Yes</label>
+                                        <input type="checkbox" id="shipment_no" name="shipment" value="no" style="transform: scale(1); margin-right: 5px;" class="ms-2">
+                                        <label for="shipment_no" style="font-size: 15px;">No</label><br>
+                                    </div>
+                                    <div class="d-flex flex-column mb-1">
+                                        <label for="ship_sched" style="font-size: 15px;">SHIPMENT SCHEDULE's / Quantity:</label>
+                                        <input type="text" id="edit-ship_sched" name="ship_sched"
+                                            style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; 
+                                            padding: 5px; height: auto; font-size: 12px; width: 100%; max-width: 600px;">
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-wip" name="wip" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="wip" style="font-size: 15px;">WIP:</label>
+                                        <label style="font-size: 15px; margin-left:230px">Stop Process:</label>
+                                        <input type="checkbox" id="stop_proc_yes" name="stop_proc" value="yes" style="transform: scale(1); margin-right: 5px;" class="ms-5">
+                                        <label for="stop_proc_yes" style="font-size: 15px;">Yes</label>
+                                        <input type="checkbox" id="stop_proc_no" name="stop_proc" value="no" style="transform: scale(1); margin-right: 5px;" class="ms-2">
+                                        <label for="stop_proc_no" style="font-size: 15px;">No</label><br>
+                                    </div>
+                                    <script>
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            function setupExclusiveCheckboxes(yesId, noId) {
+                                                const yesCheckbox = document.getElementById(yesId);
+                                                const noCheckbox = document.getElementById(noId);
+
+                                                yesCheckbox.addEventListener("change", function() {
+                                                    if (this.checked) {
+                                                        noCheckbox.checked = false;
+                                                    }
+                                                });
+
+                                                noCheckbox.addEventListener("change", function() {
+                                                    if (this.checked) {
+                                                        yesCheckbox.checked = false;
+                                                    }
+                                                });
+                                            }
+
+                                            // Apply to each section
+                                            setupExclusiveCheckboxes("recall_yes", "recall_no");
+                                            setupExclusiveCheckboxes("shipment_yes", "shipment_no");
+                                            setupExclusiveCheckboxes("stop_proc_yes", "stop_proc_no");
+                                            setupExclusiveCheckboxes("seven-yes", "seven-no"); // For File Shutdown Record
+                                        });
+                                    </script>
+                                    <div class="d-flex align-items-center">
+                                        <label for="location" style="font-size: 15px;">Locations:</label>
+                                        <input type="text" id="edit-location" name="location" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; 
+                                            padding: 5px; height: auto; font-size: 12px; width: 100%; max-width: 550px;">
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-mcs" name="mcs" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="mcs" style="font-size: 15px;">MCS:</label>
 
 
-                        <div class="col-md-6">
-                            <div class="mb-2">
-                                <label class="form-label">Repeating</label>
-                                <select class="form-control" id="edit-repeating" name="repeating">
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
+                                        <label for="mcs_details" style="font-size: 15px;">MCS Details:</label>
+                                        <input type="text" id="edit-mcs_details" name="mcs_details" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0; outline: none; 
+                                            padding: 5px; height: auto; font-size: 12px; width: 180%; max-width: 390px;">
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="edit-customer_notif" name="customer_notif" value="yes" style="transform: scale(1); margin-right: 5px;">
+                                        <label for="customer_notif" style="font-size: 15px;">Customer notification if non-conforming products have been shipped.</label>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mb-2">
-                                <label class="form-label">Machine</label>
-                                <input type="text" class="form-control" id="edit-machine" name="machine">
+                            <div class="card mt-3 p-3">
+                                <div class="card-title text-center">
+                                    <span class="fs-3">Optional attachment</span><br>
+                                    <span class="fs-8">Evidence documents</span>
+                                </div>
+                                <div class="card-body">
+                                    <h5>Attachment</h5>
+                                    <div id="edit-file-list" class="d-block flex-wrap">
+                                        <!-- Files will be dynamically inserted here -->
+                                    </div>
+                                    <!-- Image Preview Box -->
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex justify-content-center">
+                                            <div id="imagePreviewContainer"
+                                                style="display: none; width: 800px; height: 220px; border: 2px dashed #ccc; 
+                                                            padding: 10px; display: flex; justify-content: center; align-items: center; margin-top: 10px;">
+                                                <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; max-height: 100%; display: none;">
+                                            </div>
+                                        </div>
+
+
+                                        <div class="d-flex align-items-center gap-2 border p-2 mt-2 mb-2">
+                                            <label for="image" class="mb-0">Choose an Image to Upload from Your Device:</label>
+                                            <input type="file" name="image_name" id="image" accept="image/*" onchange="previewImage(event)">
+                                        </div>
+                                        <div id="file-container" class="d-flex flex-column gap-2">
+                                            <div class="d-flex align-items-center gap-2 mb-2 mt-2 p-2 border">
+                                                <label for="excel">Upload Excel File:</label>
+                                                <input type="file" name="excel_name[]" id="excel" accept=".xls,.xlsx" multiple>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="addExcelInput()">Add Another Excel File</button>
+                                    <script>
+                                        function addExcelInput() {
+                                            var fileContainer = document.getElementById("file-container");
+
+                                            // Create a new div for the file input
+                                            var newFileDiv = document.createElement("div");
+                                            newFileDiv.classList.add("d-flex", "align-items-center", "gap-2", "mb-2", "mt-2", "p-2", "border");
+
+                                            // Create the label
+                                            var newLabel = document.createElement("label");
+                                            newLabel.textContent = "Upload Excel File:";
+
+                                            // Create the input field
+                                            var newInput = document.createElement("input");
+                                            newInput.type = "file";
+                                            newInput.name = "excel_name[]";
+                                            newInput.accept = ".xls,.xlsx";
+
+                                            // Create a remove button
+                                            var removeButton = document.createElement("button");
+                                            removeButton.type = "button";
+                                            removeButton.classList.add("btn", "btn-sm", "btn-danger");
+                                            removeButton.textContent = "Remove";
+                                            removeButton.onclick = function() {
+                                                fileContainer.removeChild(newFileDiv);
+                                            };
+
+                                            // Append elements
+                                            newFileDiv.appendChild(newLabel);
+                                            newFileDiv.appendChild(newInput);
+                                            newFileDiv.appendChild(removeButton);
+
+                                            fileContainer.appendChild(newFileDiv);
+                                        }
+                                    </script>
+                                </div>
+                                <button type="submit" class="btn btn-success  w-50 mx-auto d-block">
+                                    <i class="fas fa-paper-plane"></i> Save Change</button>
                             </div>
-                            <div class="mb-2">
-                                <label class="form-label">Reference</label>
-                                <input type="text" class="form-control" id="edit-ref" name="ref">
-                            </div>
-
-                            <h5>Supplier Details</h5>
-
                         </div>
+                    </form>
                 </div>
-                <div class="mb-2">
-                    <label class="form-label">Urgent</label>
-                    <select class="form-control" id="edit-urgent" name="urgent">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Issue</label>
-                    <textarea class="form-control" id="edit-issue" name="issue"></textarea>
-                </div>
-
-                <h5>Material Details</h5>
-                <table class="table table-bordered" id="edit-material-table">
-                    <thead>
-                        <tr>
-                            <th>Material ID</th>
-                            <th>NTDJ Number</th>
-                            <th>MNS Number</th>
-                            <th>Lot/Sublot Quantity</th>
-                            <th>Quantity Affected</th>
-                            <th>Quantity Affected (Text)</th>
-                            <th>Defect Rate</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Material data will be inserted here dynamically -->
-                    </tbody>
-                </table>
-                <h5>Additional Details</h5>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-2">
-                            <label class="form-label">One</label>
-                            <input type="text" class="form-control" id="edit-one" name="one">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">One One</label>
-                            <input type="text" class="form-control" id="edit-one-one" name="one_one">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Two</label>
-                            <input type="text" class="form-control" id="edit-two" name="two">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Two One</label>
-                            <input type="text" class="form-control" id="edit-two-one" name="two_one">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Three</label>
-                            <input type="text" class="form-control" id="edit-three" name="three">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Three One</label>
-                            <input type="text" class="form-control" id="edit-three-one" name="three_one">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Four</label>
-                            <input type="text" class="form-control" id="edit-four" name="four">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Five</label>
-                            <input type="text" class="form-control" id="edit-five" name="five">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Six</label>
-                            <input type="text" class="form-control" id="edit-six" name="six">
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="mb-2">
-                            <label class="form-label">Seven</label>
-                            <input type="text" class="form-control" id="edit-seven" name="seven">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Seven One</label>
-                            <input type="text" class="form-control" id="edit-seven-one" name="seven_one">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Seven Two</label>
-                            <input type="text" class="form-control" id="edit-seven-two" name="seven_two">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Eight</label>
-                            <input type="text" class="form-control" id="edit-eight" name="eight">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Eight One</label>
-                            <input type="text" class="form-control" id="edit-eight-one" name="eight_one">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Nine</label>
-                            <input type="text" class="form-control" id="edit-nine" name="nine">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Nine One</label>
-                            <input type="text" class="form-control" id="edit-nine-one" name="nine_one">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Recall</label>
-                            <input type="text" class="form-control" id="edit-recall" name="recall">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">FG Parts</label>
-                            <input type="text" class="form-control" id="edit-fgparts" name="fgparts">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Shipment</label>
-                            <input type="text" class="form-control" id="edit-shipment" name="shipment">
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="mb-2">
-                            <label class="form-label">Ship Sched</label>
-                            <input type="text" class="form-control" id="edit-ship-sched" name="ship_sched">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">WIP</label>
-                            <input type="text" class="form-control" id="edit-wip" name="wip">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Stop Process</label>
-                            <input type="text" class="form-control" id="edit-stop-proc" name="stop_proc">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Location</label>
-                            <input type="text" class="form-control" id="edit-location" name="location">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">MCS</label>
-                            <input type="text" class="form-control" id="edit-mcs" name="mcs">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">MCS Details</label>
-                            <input type="text" class="form-control" id="edit-mcs-details" name="mcs_details">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Customer Notification</label>
-                            <input type="text" class="form-control" id="edit-customer-notif" name="customer_notif">
-                        </div>
-                    </div>
-                </div>
-
-                <h5>File Attachments</h5>
-                <div id="edit-file-list" class="d-flex flex-wrap"></div>
-
-                <div class="mb-2">
-                    <label class="form-label">Upload New Files</label>
-                    <input type="file" class="form-control" id="edit-file-upload" name="files[]" multiple>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-                </form>
             </div>
         </div>
-    </div>
-    </div>
-    </div>
-    </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -1094,6 +1157,14 @@ $result = $conn->query($query);
             });
         });
 
+        // Function to set checkbox based on response value
+        function setCheckboxValue(selector, value) {
+            if (value === "yes") {
+                $(selector).prop("checked", true);
+            } else {
+                $(selector).prop("checked", false);
+            }
+        }
 
         $(document).on("click", ".edit-btn", function() {
             var ncprId = $(this).data("id");
@@ -1113,7 +1184,12 @@ $result = $conn->query($query);
                     $("#edit-part-number").val(response.part_number);
                     $("#edit-part-name").val(response.part_name);
                     $("#edit-process").val(response.process);
-                    $("#edit-urgent").val(response.urgent);
+                    if (response.urgent === "on") {
+                        $("#edit-urgent-checkbox").prop("checked", true);
+                    } else {
+                        $("#edit-urgent-checkbox").prop("checked", false);
+                    }
+
                     $("#edit-issue").val(response.issue);
                     $("#edit-repeating").val(response.repeating);
                     $("#edit-machine").val(response.machine);
@@ -1125,34 +1201,79 @@ $result = $conn->query($query);
                     // New fields added
                     $("#edit-invoice-num").val(response.invoice_num);
                     $("#edit-purchase-order").val(response.purchase_order);
-                    $("#edit-one").val(response.one);
-                    $("#edit-one-one").val(response.one_one);
-                    $("#edit-two").val(response.two);
-                    $("#edit-two-one").val(response.two_one);
-                    $("#edit-three").val(response.three);
-                    $("#edit-three-one").val(response.three_one);
-                    $("#edit-four").val(response.four);
-                    $("#edit-five").val(response.five);
-                    $("#edit-six").val(response.six);
-                    $("#edit-seven").val(response.seven);
-                    $("#edit-seven-one").val(response.seven_one);
-                    $("#edit-seven-two").val(response.seven_two);
-                    $("#edit-eight").val(response.eight);
-                    $("#edit-eight-one").val(response.eight_one);
-                    $("#edit-nine").val(response.nine);
-                    $("#edit-nine-one").val(response.nine_one);
-                    $("#edit-recall").val(response.recall);
-                    $("#edit-fgparts").val(response.fgparts);
-                    $("#edit-shipment").val(response.shipment);
-                    $("#edit-ship-sched").val(response.ship_sched);
-                    $("#edit-wip").val(response.wip);
-                    $("#edit-stop-proc").val(response.stop_proc);
+                    // Set checkboxes
+                    setCheckboxValue("#edit-one", response.one);
+                    setCheckboxValue("#edit-one_one", response.one_one);
+                    setCheckboxValue("#edit-two", response.two);
+                    $("#edit-two_one").val(response.two_one);
+                    setCheckboxValue("#edit-three", response.three);
+                    $("#edit-three_one").val(response.three_one);
+                    setCheckboxValue("#edit-four", response.four);
+                    setCheckboxValue("#edit-five", response.five);
+                    setCheckboxValue("#edit-six", response.six);
+                    // Set the value of the text inputs
+                    $("#edit-seven_one").val(response.seven_one);
+                    $("#edit-seven_two").val(response.seven_two);
+                    // Check the correct checkbox based on response.seven value
+                    if (response.seven === "yes") {
+                        $("#seven-yes").prop("checked", true);
+                        $("#seven-no").prop("checked", false);
+                    } else if (response.seven === "no") {
+                        $("#seven-no").prop("checked", true);
+                        $("#seven-yes").prop("checked", false);
+                    } else {
+                        $("#seven-yes").prop("checked", false);
+                        $("#seven-no").prop("checked", false);
+                    }
+                    setCheckboxValue("#edit-eight", response.eight);
+                    $("#edit-eight_one").val(response.eight_one);
+                    setCheckboxValue("#edit-nine", response.nine);
+                    $("#edit-nine_one").val(response.nine_one);
+
+                    // Product Recall and Shipment
+                    if (response.recall === "yes") {
+                        $("#recall_yes").prop("checked", true);
+                        $("#recall_no").prop("checked", false);
+                    } else if (response.recall === "no") {
+                        $("#recall_yes").prop("checked", false);
+                        $("#recall_no").prop("checked", true);
+                    } else {
+                        $("#recall_yes").prop("checked", false);
+                        $("#recall_no").prop("checked", false);
+                    }
+                    setCheckboxValue("#edit-fgparts", response.fgparts);
+                    if (response.shipment === "yes") {
+                        $("#shipment_yes").prop("checked", true);
+                        $("#shipment_no").prop("checked", false);
+                    } else if (response.shipment === "no") {
+                        $("#shipment_yes").prop("checked", false);
+                        $("#shipment_no").prop("checked", true);
+                    } else {
+                        $("#shipment_yes").prop("checked", false);
+                        $("#shipment_no").prop("checked", false);
+                    }
+                    $("#edit-ship_sched").val(response.ship_sched);
+
+                    // WIP and Stop Process
+                    setCheckboxValue("#edit-wip", response.wip);
+                    if (response.stop_proc === "yes") {
+                        $("#stop_proc_yes").prop("checked", true);
+                        $("#stop_proc_no").prop("checked", false);
+                    } else if (response.stop_proc === "no") {
+                        $("#stop_proc_yes").prop("checked", false);
+                        $("#stop_proc_no").prop("checked", true);
+                    } else {
+                        $("#stop_proc_yes").prop("checked", false);
+                        $("#stop_proc_no").prop("checked", false);
+                    }
+
+                    // Locations and MCS
                     $("#edit-location").val(response.location);
-                    $("#edit-mcs").val(response.mcs);
-                    $("#edit-mcs-details").val(response.mcs_details);
-                    $("#edit-customer-notif").val(response.customer_notif);
+                    setCheckboxValue("#edit-mcs", response.mcs);
+                    $("#edit-mcs_details").val(response.mcs_details);
 
-
+                    // Customer Notification
+                    setCheckboxValue("#edit-customer_notif", response.customer_notif);
 
                     // Load Material Details into Edit Modal Table
                     var materialTable = $('#edit-material-table tbody');
@@ -1166,8 +1287,11 @@ $result = $conn->query($query);
                             <td><input type="text" class="form-control" name="ntdj_num[]" value="${material.ntdj_num}"></td>
                             <td><input type="text" class="form-control" name="mns_num[]" value="${material.mns_num}"></td>
                             <td><input type="text" class="form-control" name="lot_sublot_qty[]" value="${material.lot_sublot_qty}"></td>
-                            <td><input type="text" class="form-control" name="qty_affected[]" value="${material.qty_affected}"></td>
-                            <td><input type="text" class="form-control" name="qty_affected_text[]" value="${material.qty_affected_text}"></td>
+                            <td class="d-flex gap-2">
+                                <input type="number" class="form-control" name="qty_affected[]" value="${material.qty_affected}" required>
+                                <input type="text" class="form-control" name="qty_affected_text[]" value="${material.qty_affected_text}" placeholder="Enter text">
+                            </td>
+
                             <td><input type="text" class="form-control" name="defect_rate[]" value="${material.defect_rate}"></td>
                         </tr>
                     `);
@@ -1176,18 +1300,36 @@ $result = $conn->query($query);
                         materialTable.append(`<tr><td colspan="7">No material records found</td></tr>`);
                     }
 
-                    // Load existing files
-                    var fileContainer = $("#edit-file-list");
-                    fileContainer.empty();
+                    // Handling file attachments
+                    var filesContainer = $('#edit-file-list'); // Ensure this matches the ID in your HTML
+                    filesContainer.empty();
 
                     if (response.files.length > 0) {
                         response.files.forEach(function(file) {
-                            let fileHtml = `<div class="file-item">
-                                    <a href="${file.file_path}" target="_blank">${file.file_name}</a>
-                                    <button class="btn btn-danger btn-sm remove-file" data-id="${file.id}">Remove</button>
-                                </div>`;
-                            fileContainer.append(fileHtml);
+                            let fileLink;
+                            let fileType = file.file_type.toLowerCase();
+
+                            if (fileType === "jpg" || fileType === "png" || fileType === "jpeg" || fileType === "gif") {
+                                // Image preview
+                                fileLink = `<img src="${file.file_path}" class="img-thumbnail" style="max-width: 150px; margin: 5px; margin-bottom: 10px;" />`;
+                            } else {
+                                // Download link
+                                fileLink = `<a href="${file.file_path}" download="${file.file_name}" class="btn btn-primary btn-sm" 
+                style="margin-bottom: 10px;">
+                    <i class="fa fa-download"></i> Download ${file.file_name}
+                </a>`;
+                            }
+
+                            // Delete button
+                            let deleteButton = `<button class="btn btn-danger btn-sm delete-file" 
+                            data-id="${file.id}" style="margin-left: 10px;">
+                                <i class="fa fa-trash"></i> Delete
+                            </button>`;
+
+                            filesContainer.append(`<div class="file-item d-flex align-items-center">${fileLink}${deleteButton}</div>`);
                         });
+                    } else {
+                        filesContainer.append(`<p>No files uploaded</p>`);
                     }
 
                     $("#editModal").modal("show");
