@@ -1,26 +1,5 @@
 <?php
-session_start();
-
-// If logged in, send them to their dashboard
-if (isset($_SESSION["role"])) {
-    $role_dashboard = [
-        "SUPERADMIN" => "superadmin_dashboard.php",
-        "ADMIN" => "admin_dashboard.php",
-        "STAFF" => "admin_dashboard.php",
-        "ENGINEER" => "engineer_dashboard.php",
-        "SUPERVISOR" => "supervisor_dashboard.php",
-        "MANAGER" => "manager_dashboard.php",
-        "REPRESENTATIVE" => "representative_dashboard.php",
-        "GUEST" => "guest_dashboard.php"
-    ];
-
-    if (isset($role_dashboard[$_SESSION["role"]])) {
-        header("Location: " . $role_dashboard[$_SESSION["role"]]);
-        exit();
-    }
-}
-
-// Show login or landing page content here
+require "config.php";
 ?>
 
 <!DOCTYPE html>
@@ -30,16 +9,13 @@ if (isset($_SESSION["role"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NCPR System</title>
-    <!-- Bootstrap CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
 
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="fontawesome-free-6.7.2-web/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/all.min.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/DataTables/datatables.min.css" />
+    <link rel="stylesheet" href="assets/css/sweetalert2.min.css">
+    
 </head>
 <style>
     body {
@@ -139,6 +115,13 @@ if (isset($_SESSION["role"])) {
             </div>
         </div>
     </div>
+
+    <script src="assets/vendor/bootstrap/js/jquery.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/all.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/fontawesome.min.js"></script>
+    <script src="assets/DataTables/datatables.min.js"></script>
+    <script src="assets/js/sweetalert2.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -283,7 +266,6 @@ if (isset($_SESSION["role"])) {
             });
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

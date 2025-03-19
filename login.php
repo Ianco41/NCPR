@@ -16,7 +16,7 @@ function handleGuestLogin($guestRole) {
 
     // Assign session variables based on selected guest role
     $_SESSION["user"] = ucfirst($guestRole); // Capitalize first letter
-    $_SESSION["role"] = $guestRole;
+    $_SESSION["role"] = "GUEST";
 
     // Redirect page based on role
     $redirectPages = [
@@ -26,7 +26,7 @@ function handleGuestLogin($guestRole) {
     return json_encode([
         "status" => "success",
         "message" => "Guest has successfully logged in.",
-        "redirect" => $redirectPages[$guestRole] ?? "guest_ncprfiling.php"
+        "redirect" => $redirectPages[0] ?? "guest_ncprfiling.php"
     ]);
 }
 

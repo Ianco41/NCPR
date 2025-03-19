@@ -12,18 +12,11 @@ $result = $conn->query($query);
 
 <head>
     <title>admin Dashboard</title>
-    <!-- Bootstrap CSS (CDN) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-
-    <!-- Font Awesome (CDN) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="fontawesome-free-6.7.2-web/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/all.min.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/DataTables/datatables.min.css" />
+    <link rel="stylesheet" href="assets/css/sweetalert2.min.css">
 </head>
 <style>
     ::after,
@@ -47,7 +40,7 @@ $result = $conn->query($query);
     }
 
     body {
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Poppins', sans-serif;
     }
 
     .wrapper {
@@ -70,6 +63,12 @@ $result = $conn->query($query);
         background-color: #0e2238;
         display: flex;
         flex-direction: column;
+        height: 100vh;
+        /* Full viewport height */
+        position: sticky;
+        /* ✅ Keeps sidebar sticky */
+        top: 0;
+        /* ✅ Ensures it stays at the top when scrolling */
     }
 
     #sidebar.expand {
@@ -106,7 +105,8 @@ $result = $conn->query($query);
 
     .sidebar-nav {
         padding: 2rem 0;
-        flex: 1 1 auto;
+        flex-grow: 1;
+        /* ✅ Allows it to take available space and push footer down */
     }
 
     a.sidebar-link {
@@ -959,17 +959,12 @@ $result = $conn->query($query);
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/jquery.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/all.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/fontawesome.min.js"></script>
+    <script src="assets/DataTables/datatables.min.js"></script>
+    <script src="assets/js/sweetalert2.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -1369,7 +1364,12 @@ $result = $conn->query($query);
     <!-- DataTable Initialization -->
     <script>
         $(document).ready(function() {
-            $('#ncprTable').DataTable(); // Initialize DataTable for sorting, searching, and pagination
+            $('#ncprTable').DataTable({
+                "columnDefs": [{
+                    "targets": [0],
+                    "visible": false
+                }]
+            }); // Initialize DataTable for sorting, searching, and pagination
         });
     </script>
     <script>

@@ -1,6 +1,6 @@
 <?php
 require "connection.php"; // Include database connection
-session_start();
+require "config.php";
 
 try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -17,18 +17,12 @@ try {
 
 <head>
     <title>admin Dashboard</title>
-    <!-- Bootstrap CSS (CDN) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
-    <!-- Font Awesome (CDN) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="fontawesome-free-6.7.2-web/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/all.min.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/DataTables/datatables.min.css" />
+    <link rel="stylesheet" href="assets/css/sweetalert2.min.css">
 </head>
 <style>
     ::after,
@@ -202,25 +196,25 @@ try {
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="ncprfiling.php" class="sidebar-link">
+                    <a href="" class="sidebar-link">
                         <i class="fa-regular fa-folder-open"></i>
                         <span>NCPR Filing</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="ncprlist.php" class="sidebar-link">
+                    <a href="" class="sidebar-link">
                         <i class="fa-regular fa-address-card"></i>
                         <span>NCPR List</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="productkey.php" class="sidebar-link">
+                    <a href="" class="sidebar-link">
                         <i class="fa-solid fa-helmet-safety"></i>
                         <span>Product Key</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="status.php" class="sidebar-link">
+                    <a href="" class="sidebar-link">
                         <i class="fa-solid fa-paperclip"></i>
                         <span>Engineer List</span>
                     </a>
@@ -344,17 +338,12 @@ try {
                 </div>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <!-- DataTables JS -->
-        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/vendor/bootstrap/js/jquery.min.js"></script>
+        <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/vendor/bootstrap/js/all.min.js"></script>
+        <script src="assets/vendor/bootstrap/js/fontawesome.min.js"></script>
+        <script src="assets/DataTables/datatables.min.js"></script>
+        <script src="assets/js/sweetalert2.min.js"></script>
 
         <!-- DataTable Initialization -->
         <script>
