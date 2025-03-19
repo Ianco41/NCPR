@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "admin") {
+if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "ADMIN" && $_SESSION["role"] !== "STAFF") {
     header("Location: login.php");
     exit();
 }
@@ -25,6 +25,11 @@ $conn->close();
 
 <head>
     <title>admin Dashboard</title>
+    <!-- Bootstrap CSS (CDN) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <!-- Font Awesome (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="fontawesome-free-6.7.2-web/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -167,6 +172,12 @@ $conn->close();
     .sidebar-footer {
         position: relative;
     }
+
+    .sidebar-item.active a {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-left: 3px solid #3b7ddd;
+        color: #3b7ddd;
+    }
 </style>
 
 <body>
@@ -199,7 +210,7 @@ $conn->close();
                         <span>NCPR List</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item active">
                     <a href="productkey.php" class="sidebar-link">
                         <i class="fa-solid fa-helmet-safety"></i>
                         <span>Product Key</span>

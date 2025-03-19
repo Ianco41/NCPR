@@ -19,15 +19,15 @@ function handleGuestLogin($guestRole) {
     $_SESSION["role"] = $guestRole;
 
     // Redirect page based on role
-    $redirectPage = "guest_ncprfiling.php"; // Default page
-    if ($guestRole === "guest2") {
-        $redirectPage = "guest_dashboard.php"; // Example for guest2
-    } elseif ($guestRole === "guest3") {
-        $redirectPage = "guest_reports.php"; // Example for guest3
-    }
-
-    // Successful guest login
-    return json_encode(["status" => "success", "message" => "Guest has successfully logged in.", "redirect" => $redirectPage]);
+    $redirectPages = [
+        "guest_ncprfiling.php"
+    ];
+    
+    return json_encode([
+        "status" => "success",
+        "message" => "Guest has successfully logged in.",
+        "redirect" => $redirectPages[$guestRole] ?? "guest_ncprfiling.php"
+    ]);
 }
 
 // Function to handle admin login
@@ -51,10 +51,9 @@ function handleAdminLogin($username, $password, $conn) {
     }
 
     // Bind the result to variables
-    $stmt->bind_result($hashed_password, $role_name); // Ensure role_name is bound correctly
-    $stmt->fetch(); // Fetch the data into the bound variables
+    $stmt->bind_result($hashed_password, $role_name);
+    $stmt->fetch();
 
-    // Ensure $role_name is not empty before using it
     if (empty($role_name)) {
         return json_encode(["status" => "error", "message" => "Role not found."]);
     }
@@ -65,13 +64,21 @@ function handleAdminLogin($username, $password, $conn) {
         $_SESSION["role"] = $role_name;
 
         // Return based on role
-        if ($role_name === "ADMIN" || $role_name === "STAFF") {
-            return json_encode(["status" => "success", "message" => "Admin has successfully logged in.", "redirect" => "admin_dashboard.php"]);
-        } else if ($role_name === "SUPERADMIN") {
-            return json_encode(["status" => "success", "message" => "Superadmin has successfully logged in.", "redirect" => "superadmin_dashboard.php"]);
-        } else {
-            return json_encode(["status" => "error", "message" => "Unauthorized role."]);
-        }
+        $redirectPages = [
+            "STAFF" => "admin_dashboard.php",
+            "ADMIN" => "admin_dashboard.php",
+            "ENGINEER" => "engineer_dashboard.php",
+            "SUPERVISOR" => "admin_dashboard.php",
+            "MANAGER" => "admin_dashboard.php",
+            "REPRESENTATIVE" => "admin_dashboard.php",
+            "SUPERADMIN" => "superadmin_dashboard.php"
+        ];
+
+        return json_encode([
+            "status" => "success",
+            "message" => ucfirst(strtolower($role_name)) . " has successfully logged in.",
+            "redirect" => $redirectPages[$role_name] ?? "error.php"
+        ]);
     } else {
         return json_encode(["status" => "error", "message" => "Incorrect Password."]);
     }
@@ -79,22 +86,18 @@ function handleAdminLogin($username, $password, $conn) {
     $stmt->close();
 }
 
-
 // Main logic to handle request
 $response = ["status" => "error", "message" => "Invalid request."];
 
 // Guest login handling
-if (isset($_POST["guest"]) && !empty($_POST["guest"])) {
-    $guestRole = $_POST["guest"];
-    echo handleGuestLogin($guestRole);
+if (isset($_POST["guest_role"]) && !empty($_POST["guest_role"])) {
+    echo handleGuestLogin($_POST["guest_role"]);
     exit();
 }
 
 // Admin login handling
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $username = $_POST["username"] ?? "";
-    $password = $_POST["password"] ?? "";
-    echo handleAdminLogin($username, $password, $conn);
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["username"]) && isset($_POST["password"])) {
+    echo handleAdminLogin($_POST["username"], $_POST["password"], $conn);
     exit();
 }
 

@@ -1,3 +1,28 @@
+<?php
+session_start();
+
+// If logged in, send them to their dashboard
+if (isset($_SESSION["role"])) {
+    $role_dashboard = [
+        "SUPERADMIN" => "superadmin_dashboard.php",
+        "ADMIN" => "admin_dashboard.php",
+        "STAFF" => "admin_dashboard.php",
+        "ENGINEER" => "engineer_dashboard.php",
+        "SUPERVISOR" => "supervisor_dashboard.php",
+        "MANAGER" => "manager_dashboard.php",
+        "REPRESENTATIVE" => "representative_dashboard.php",
+        "GUEST" => "guest_dashboard.php"
+    ];
+
+    if (isset($role_dashboard[$_SESSION["role"]])) {
+        header("Location: " . $role_dashboard[$_SESSION["role"]]);
+        exit();
+    }
+}
+
+// Show login or landing page content here
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,7 +78,7 @@
             </form>
             <hr>
             <form method="POST" action="login.php">
-                <input type="hidden" name="guest" id="guestHidden" value="">
+
                 <div class="mb-3">
                     <label for="guestAccess" class="form-label">Select Guest Access:</label>
                     <select id="guestAccess" name="guest_role" class="form-select">
@@ -116,26 +141,49 @@
     </div>
 
     <script>
-        $.ajax({
-            type: "POST",
-            url: "login.php",
-            data: {
-                username: username,
-                password: password
-            },
-            success: function(response) {
-                console.log("Response from server:", response); // Logs server's JSON response
-                var data = JSON.parse(response);
-                if (data.status === "success") {
-                    window.location.href = data.redirect; // Redirect on success
+        $(document).ready(function() {
+            $("#loginForm").submit(function(e) {
+                e.preventDefault(); // Prevent form submission
+
+                var username = $("#username").val();
+                var password = $("#password").val();
+                var guestRole = $("#guest_role").val(); // Assuming there's a dropdown for guest roles
+
+                var requestData = {};
+
+                if (guestRole) {
+                    // Guest login scenario
+                    requestData = {
+                        guest_role: guestRole
+                    };
                 } else {
-                    alert(data.message); // Show error message
+                    // Admin login scenario
+                    requestData = {
+                        username: username,
+                        password: password
+                    };
                 }
-            },
-            error: function(xhr, status, error) {
-                console.log("Error:", error); // Log any AJAX error
-            }
+
+                $.ajax({
+                    type: "POST",
+                    url: "login.php",
+                    data: requestData,
+                    success: function(response) {
+                        console.log("Response from server:", response); // Debugging
+                        var data = JSON.parse(response);
+                        if (data.status === "success") {
+                            window.location.href = data.redirect; // Redirect based on role
+                        } else {
+                            alert(data.message); // Show error message
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error:", error); // Log any AJAX error
+                    }
+                });
+            });
         });
+
 
         $(document).ready(function() {
             $("#resetPasswordForm").on("submit", function(e) {

@@ -1,14 +1,15 @@
 <?php
-    session_start();
-    if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "ADMIN" && $_SESSION["role"] !== "STAFF") {
-        header("Location: loginform.php");
-        exit();
-    }
+    require "config.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>admin Dashboard</title>
+    <!-- Bootstrap CSS (CDN) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <!-- Font Awesome (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="fontawesome-free-6.7.2-web/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">

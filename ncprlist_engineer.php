@@ -1,8 +1,7 @@
 <?php
-session_start();
 // Include your database connection file
 include 'connection.php'; // Make sure you have a proper database connection here
-
+require "config.php";
 // Fetch data from ncpr_table
 $query = "SELECT id, initiator, ncpr_num, date, part_number, part_name, status, urgent FROM ncpr_table";
 $result = $conn->query($query);
@@ -184,7 +183,7 @@ $result = $conn->query($query);
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="admin_dashboard.php" class="sidebar-link">
+                    <a href="engineer_dashboard.php" class="sidebar-link">
                         <i class="fa-solid fa-house"></i>
                         <span>Dashboard</span>
                     </a>
@@ -196,25 +195,25 @@ $result = $conn->query($query);
                     </a>
                 </li>
                 <li class="sidebar-item active">
-                    <a href="ncprlist.php" class="sidebar-link">
+                    <a href="ncprlist_engineer.php" class="sidebar-link">
                         <i class="fa-regular fa-address-card"></i>
                         <span>NCPR List</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="productkey.php" class="sidebar-link">
+                    <a href="" class="sidebar-link">
                         <i class="fa-solid fa-helmet-safety"></i>
                         <span>Product Key</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="status.php" class="sidebar-link">
+                    <a href="" class="sidebar-link">
                         <i class="fa-solid fa-paperclip"></i>
                         <span>Status</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="setting.php" class="sidebar-link">
+                    <a href="" class="sidebar-link">
                         <i class="fa-solid fa-gear"></i>
                         <span>Setting</span>
                     </a>
@@ -258,12 +257,6 @@ $result = $conn->query($query);
                                 <td>
                                     <button class="btn btn-info btn-sm view-btn" data-id="<?php echo $row['ncpr_num']; ?>" data-bs-toggle="modal" data-bs-target="#viewModal">
                                         View
-                                    </button>
-                                    <button class="btn btn-warning btn-sm edit-btn" data-id="<?php echo $row['ncpr_num']; ?>" data-bs-toggle="modal" data-bs-target="#editModal">
-                                        <span>Edit</span>
-                                    </button>
-                                    <button class="btn btn-success btn-sm add-btn" data-id="<?php echo $row['ncpr_num']; ?>" data-bs-toggle="modal" data-bs-target="#addModal">
-                                        <span>Dispo</span>
                                     </button>
                                 </td>
                             </tr>
