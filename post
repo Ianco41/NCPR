@@ -1,0 +1,58 @@
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // 1. Disposition Required From
+    $dispo_from = $_POST['dispo_from'] ?? []; // Array (NTPI, NFLD)
+    $mrb = $_POST['mrb'] ?? ''; // YES / NO
+
+    // 2. Need Customer Approval
+    $customer_approval = $_POST['customer_approval'] ?? ''; // YES / NO
+    $document_alert = $_POST['document_alert'] ?? '';
+
+    // 3. Impact Analysis / Risk Assessment
+    $impact_analysis_selected = $_POST['impact_analysis'] ?? []; // Array
+    $impact_analysis = $_POST['impact_analysis'] ?? ''; // Textarea
+
+    // 4. Affected Business Unit / Contact Person
+    $affected_business = isset($_POST['affected_business']) ? 'Checked' : 'Not Checked';
+    $contact_person = $_POST['contact_person'] ?? '';
+
+    // 5. Other Instructions
+    $other_instructions = isset($_POST['other_instructions']) ? 'Checked' : 'Not Checked';
+    $other_specify = $_POST['other_specify'] ?? '';
+
+    // 6. Product Disposition
+    $product_dispo = $_POST['product_dispo'] ?? []; // Array
+    $yield_off = $_POST['yield_off'] ?? '';
+    $da_no = $_POST['da_no'] ?? '';
+    $rework_da_no = $_POST['rework_da_no'] ?? '';
+    $wis_no = $_POST['wis_no'] ?? '';
+
+    // 7. Additional Product Disposition
+    $scrap_amount = $_POST['scrap_amount'] ?? '';
+    $shipment_date = $_POST['shipment_date'] ?? '';
+
+    // 8. QA Verification, Containment, and Investigation Activities
+    $containment = $_POST['containment'] ?? '';
+
+    // 9. Cause of Non-Conformance
+    $non_conformance = $_POST['non-conformance'] ?? '';
+    $cause = $_POST['cause'] ?? []; // Array
+
+    // 10. Person Responsible for Non-Conformance
+    $id_no = $_POST['id_no'] ?? '';
+    $name = $_POST['name'] ?? '';
+
+    // 11. Potential Field Failure
+    $potential_failure = $_POST['potential_failure'] ?? ''; // YES / NO
+
+    // 12. Corrective Action Request
+    $corrective_action = $_POST['corrective_action'] ?? ''; // YES / NO / NA
+    $car = isset($_POST['car']) ? 'Checked' : 'Not Checked';
+    $car_no = $_POST['car_no'] ?? '';
+    $scar = isset($_POST['scar']) ? 'Checked' : 'Not Checked';
+    $scar_no = $_POST['scar_no'] ?? '';
+    $bd_report = $_POST['bd_report'] ?? ''; // YES / NO
+
+    // Debugging Output (Optional)
+    print_r($_POST);
+}

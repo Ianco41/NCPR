@@ -1,12 +1,5 @@
 <?php
-require "config.php";
-$user_role = $_SESSION['role'];
-// Function to check if the role is allowed
-function isAuthorized($allowed_roles)
-{
-    global $user_role;
-    return in_array($user_role, $allowed_roles);
-}
+//require "config.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -678,7 +671,7 @@ function isAuthorized($allowed_roles)
         </div>
     </div>
 
-    <!-- Modal Structure -->
+    <!-- Dispo Approval Modal -->
     <div class="modal fade" id="dispoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -688,7 +681,7 @@ function isAuthorized($allowed_roles)
                 </div>
                 <div class="modal-body">
                     <form id="dispoForm" action="dispo_process.php" method="POST">
-                        <p>Selected ID: <span id="modal-id"></span></p>
+
                         <div class="form-floating mb-3">
                             <textarea class="form-control" name="containment" id="containment" placeholder="Enter details here..." style="height: 100px;"></textarea>
                             <label for="containment">This space is intended for QA verification, containment and investigation activities</label>
@@ -984,32 +977,14 @@ function isAuthorized($allowed_roles)
                                     <td>
                                         <strong>QA Engineer / NT Representative:</strong><br>
                                         (Signature & Date)
-                                        <?php if (isAuthorized([$user_role])): ?>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Select Action
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item approval-action" href="#" data-action="approve" data-role="QA Engineer">Approve</a></li>
-                                                    <li><a class="dropdown-item approval-action" href="#" data-action="reject" data-role="QA Engineer">Reject</a></li>
-                                                    <li><a class="dropdown-item approval-action" href="#" data-action="cancel" data-role="QA Engineer">Cancel</a></li>
-                                                </ul>
-                                            </div>
-                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <strong>QA Manager or his/her appointee:</strong><br>
                                         (Signature & Date)
-                                        <?php if (isAuthorized(["SUPERVISOR"]) || isAuthorized(["MANAGER"])): ?>
-                                            <button type="button" class="btn btn-success approve-btn" data-action="approve" data-role="QA Manager">Approve</button>
-                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <strong>Sheilah / NT Representative:</strong><br>
                                         (Signature & Date)
-                                        <?php if (isAuthorized(["REPRESENTATIVE"])): ?>
-                                            <button type="button" class="btn btn-warning approve-btn" data-action="approve" data-role="Sheilah">Approve</button>
-                                        <?php endif; ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1110,62 +1085,6 @@ function isAuthorized($allowed_roles)
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            let selectedId = "";
-
-            // Handle dynamically created "Add" buttons using event delegation
-            $('#ncprTable tbody').on('click', '.add-btn', function() {
-                selectedId = $(this).data('id'); // Get the ID from the clicked button
-                console.log("Button clicked, selectedId:", selectedId); // Debugging
-                $("#modal-id").text(selectedId); // Display ID inside modal
-            });
-
-            // Approval Action Click Event
-            $(".approval-action").click(function(e) {
-                e.preventDefault();
-
-                var action = $(this).data("action");
-                var role = $(this).data("role");
-
-                console.log("Approval button clicked - Action:", action, "Role:", role, "Selected ID:", selectedId); // Debugging
-
-                if (!selectedId) {
-                    alert("No ID selected!");
-                    console.error("Error: No ID selected!"); // Debugging
-                    return;
-                }
-
-                // Show loading state
-                console.log("Sending AJAX request...");
-                $.ajax({
-                    url: "approval.php",
-                    type: "POST",
-                    data: {
-                        action: action,
-                        role: role,
-                        ncpr_num: selectedId // Pass the selected ID from modal
-                    },
-                    success: function(response) {
-                        try {
-                            var result = (typeof response === "object") ? response : JSON.parse(response);
-                            alert(result.message);
-                            if (result.status === "success") {
-                                location.reload();
-                            }
-                        } catch (e) {
-                            console.error("Error parsing JSON response:", e, response);
-                            alert("Unexpected server response. Check console.");
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX Error:", status, error, xhr.responseText); // Debugging
-                        alert("AJAX request failed. Check console for details.");
-                    }
-                });
-            });
-        });
-    </script>
     <!-- DataTable Initialization -->
     <script>
         $(document).ready(function() {

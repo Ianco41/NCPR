@@ -1,28 +1,6 @@
 <?php
-session_start();
-
-// If logged in, send them to their dashboard
-if (isset($_SESSION["role"])) {
-    $role_dashboard = [
-        "SUPERADMIN" => "superadmin_dashboard.php",
-        "ADMIN" => "admin_dashboard.php",
-        "STAFF" => "admin_dashboard.php",
-        "ENGINEER" => "engineer_dashboard.php",
-        "SUPERVISOR" => "supervisor_dashboard.php",
-        "MANAGER" => "manager_dashboard.php",
-        "REPRESENTATIVE" => "representative_dashboard.php",
-        "GUEST" => "guest_dashboard.php"
-    ];
-
-    if (isset($role_dashboard[$_SESSION["role"]])) {
-        header("Location: " . $role_dashboard[$_SESSION["role"]]);
-        exit();
-    }
-}
-
-// Show login or landing page content here
+require "config.php";
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
