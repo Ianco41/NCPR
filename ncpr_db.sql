@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 17, 2025 at 08:56 AM
+-- Generation Time: Mar 20, 2025 at 09:02 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -138,22 +138,23 @@ CREATE TABLE `ncpr_table` (
   `location` varchar(255) NOT NULL,
   `mcs` varchar(255) NOT NULL,
   `mcs_details` varchar(255) NOT NULL,
-  `customer_notif` varchar(255) NOT NULL
+  `customer_notif` varchar(255) NOT NULL,
+  `dispo_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ncpr_table`
 --
 
-INSERT INTO `ncpr_table` (`id`, `initiator`, `ncpr_num`, `date`, `part_number`, `part_name`, `process`, `urgent`, `status`, `issue`, `awpi`, `dc`, `deviation`, `repeating`, `cavity`, `machine`, `ref`, `bg`, `one`, `one_one`, `two`, `two_one`, `three`, `three_one`, `four`, `five`, `six`, `seven`, `seven_one`, `seven_two`, `eight`, `eight_one`, `nine`, `nine_one`, `recall`, `fgparts`, `shipment`, `ship_sched`, `wip`, `stop_proc`, `location`, `mcs`, `mcs_details`, `customer_notif`) VALUES
-(100, 'a', '25-0001', '2025-03-12', 'a', 'a', 'a', 'on', 'open', 'a', '1', '1', 'Yes', 'Yes', '1', 'q', '1', 'a', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(101, 'Cabo, Gerardo', '25-0002', '2025-03-12', '196555', 'amsdnsad', 'Area 51', 'on', 'open', 'Laro laro', 'dog', 'bakit', 'Yes', 'Yes', 'Laro dog laro dog laro dog laro dog laro dog laro dog laro dog', 'a', 'awts', 'awts123', 'yes', 'yes', 'yes', 'a', 'yes', 'a', 'yes', 'yes', 'yes', 'yes', 'a', 'a', 'yes', 'a', 'yes', 'a', 'yes', 'yes', 'yes', 'a', 'yes', 'yes', 'a', 'yes', 'a', 'yes'),
-(102, 'MARK', '25-0003', '2025-03-17', '1234', 'amsdnsad', 'sadas', 'off', 'open', 'dasd', '', '', '', '', '', '', '21321', 'adasas', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(103, 'MARKI', '25-0004', '2025-03-17', '1234', 'amsdnsad', 'asdas', 'off', 'open', 'asdas', '', '', '', '', '', '', 'asd', 'adas', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(104, 'ASDAS', '25-0005', '2025-03-17', '1234', 'amsdnsad', 'asdas', 'off', 'open', 'asd', '', '', '', '', '', '', 'asd', 'asd', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(105, 'ADASD', '25-0006', '2025-03-17', '123', '1', 'sadsa', 'off', 'open', 'sadsafdsf', '', '', '', '', '', '', 'dsfd', 'dfsfd', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(106, 'ASDR', '25-0007', '2025-03-17', '187303-001', 'AB MIKRO', 'ASD', 'off', 'open', 'ASD', '', '', '', '', '', '', 'ASD', 'ASD', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(107, 'CADO', '25-0008', '2025-03-17', '187306-001', 'AB MIKRO', '213QSA', 'on', 'open', 'ASDAS', '', '', '', '', '', '', 'ASDASD', 'SADSA', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `ncpr_table` (`id`, `initiator`, `ncpr_num`, `date`, `part_number`, `part_name`, `process`, `urgent`, `status`, `issue`, `awpi`, `dc`, `deviation`, `repeating`, `cavity`, `machine`, `ref`, `bg`, `one`, `one_one`, `two`, `two_one`, `three`, `three_one`, `four`, `five`, `six`, `seven`, `seven_one`, `seven_two`, `eight`, `eight_one`, `nine`, `nine_one`, `recall`, `fgparts`, `shipment`, `ship_sched`, `wip`, `stop_proc`, `location`, `mcs`, `mcs_details`, `customer_notif`, `dispo_id`) VALUES
+(100, 'a', '25-0001', '2025-03-12', 'a', 'a', 'a', 'on', 'open', 'a', '1', '1', 'Yes', 'Yes', '1', 'q', '1', 'a', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 6),
+(101, 'Cabo, Gerardo', '25-0002', '2025-03-12', '196555', 'amsdnsad', 'Area 51', 'on', 'open', 'Laro laro', 'dog', 'bakit', 'Yes', 'Yes', 'Laro dog laro dog laro dog laro dog laro dog laro dog laro dog', 'a', 'awts', 'awts123', 'yes', 'yes', 'yes', 'a', 'yes', 'a', 'yes', 'yes', 'yes', 'yes', 'a', 'a', 'yes', 'a', 'yes', 'a', 'yes', 'yes', 'yes', 'a', 'yes', 'yes', 'a', 'yes', 'a', 'yes', 6),
+(102, 'MARK', '25-0003', '2025-03-17', '1234', 'amsdnsad', 'sadas', 'off', 'open', 'dasd', '', '', '', '', '', '', '21321', 'adasas', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 6),
+(103, 'MARKI', '25-0004', '2025-03-17', '1234', 'amsdnsad', 'asdas', 'off', 'open', 'asdas', '', '', '', '', '', '', 'asd', 'adas', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 6),
+(104, 'ASDAS', '25-0005', '2025-03-17', '1234', 'amsdnsad', 'asdas', 'off', 'open', 'asd', '', '', '', '', '', '', 'asd', 'asd', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 6),
+(105, 'ADASD', '25-0006', '2025-03-17', '123', '1', 'sadsa', 'off', 'open', 'sadsafdsf', '', '', '', '', '', '', 'dsfd', 'dfsfd', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 6),
+(106, 'ASDR', '25-0007', '2025-03-17', '187303-001', 'AB MIKRO', 'ASD', 'off', 'open', 'ASD', '', '', '', '', '', '', 'ASD', 'ASD', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 6),
+(107, 'CADO', '25-0008', '2025-03-17', '187306-001', 'AB MIKRO', '213QSA', 'on', 'open', 'ASDAS', '', '', '', '', '', '', 'ASDASD', 'SADSA', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 10);
 
 -- --------------------------------------------------------
 
@@ -1186,17 +1187,19 @@ CREATE TABLE `users` (
   `username` varchar(50) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
   `role_id` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `person_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `role_id`, `created_at`) VALUES
-(2, 'jr.gerardo14@gmail.com', '$2y$10$TYELwL2PhUlikVxs2kh6OeE.oDpj91gEooI2pKY1FPwRaj.MYKsH.', 2, '2025-03-17 06:53:25'),
-(3, 'Superadmin@gmail.com', '$2y$10$nqr.jgUU5knN8gEWd1YlB.2VGLDPCH.fhNHeFiYwD3nGGeIk.W28C', 1, '2025-03-17 06:55:18'),
-(4, 'qastaff1@ntphil.com', '$2y$10$./PMVLBHDHh05BPvTaON3.zvvvBFvD9RDhsZiC8zXeGNXGLVZoFVa', 7, '2025-03-17 07:02:11');
+INSERT INTO `users` (`id`, `username`, `password`, `role_id`, `created_at`, `person_id`) VALUES
+(2, 'jr.gerardo14@gmail.com', '$2y$10$TYELwL2PhUlikVxs2kh6OeE.oDpj91gEooI2pKY1FPwRaj.MYKsH.', 2, '2025-03-17 06:53:25', 0),
+(3, 'Superadmin@gmail.com', '$2y$10$nqr.jgUU5knN8gEWd1YlB.2VGLDPCH.fhNHeFiYwD3nGGeIk.W28C', 1, '2025-03-17 06:55:18', 0),
+(4, 'qastaff1@ntphil.com', '$2y$10$./PMVLBHDHh05BPvTaON3.zvvvBFvD9RDhsZiC8zXeGNXGLVZoFVa', 7, '2025-03-17 07:02:11', 0),
+(5, 'engr_user', '$2y$10$MKfvuNI6yfh4/IGo.QkrjOlt0vg1w1r8uOLgRmNRZdTJfz/7.Wrgu', 6, '2025-03-19 02:30:54', 1);
 
 -- --------------------------------------------------------
 
@@ -1387,7 +1390,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users_roles`
