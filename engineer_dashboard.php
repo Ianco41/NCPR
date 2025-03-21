@@ -1,5 +1,12 @@
 <?php
 require "config.php";
+$user_role = $_SESSION['role'];
+// Function to check if the role is allowed
+function isAuthorized($allowed_roles)
+{
+    global $user_role;
+    return in_array($user_role, $allowed_roles);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -311,7 +318,7 @@ require "config.php";
             <div class="card">
                 <div class="card-body">
                     <div class="card-title">
-                        <h5 class="mb-3">NCPR Table</h5>
+                        <h5 class="mb-3">NCPR Recently Filed Table</h5>
                     </div>
                     <div class="table-container table-responsive mt-3">
                         <table id="ncprTable" class="table table-bordered table-hover" style="width:100%">
@@ -674,7 +681,7 @@ require "config.php";
                 </div>
                 <div class="modal-body">
                     <form id="dispoForm" action="dispo_process.php" method="POST">
-
+                        <p>Selected ID: <span id="modal-id"></span></p>
                         <div class="form-floating mb-3">
                             <textarea class="form-control" name="containment" id="containment" placeholder="Enter details here..." style="height: 100px;"></textarea>
                             <label for="containment">This space is intended for QA verification, containment and investigation activities</label>
@@ -970,6 +977,18 @@ require "config.php";
                                     <td>
                                         <strong>QA Engineer / NT Representative:</strong><br>
                                         (Signature & Date)
+                                        <?php if (isAuthorized([$user_role])): ?>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Select Action
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item approval-action" href="#" data-action="approve" data-role="QA Engineer">Approve</a></li>
+                                                    <li><a class="dropdown-item approval-action" href="#" data-action="reject" data-role="QA Engineer">Reject</a></li>
+                                                    <li><a class="dropdown-item approval-action" href="#" data-action="cancel" data-role="QA Engineer">Cancel</a></li>
+                                                </ul>
+                                            </div>
+                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <strong>QA Manager or his/her appointee:</strong><br>
@@ -1072,6 +1091,7 @@ require "config.php";
     <script src="assets/vendor/bootstrap/js/fontawesome.min.js"></script>
     <script src="assets/DataTables/datatables.min.js"></script>
     <script src="assets/js/sweetalert2.min.js"></script>
+    <script src="assets/js/approval.js"></script>
 
     <!-- DataTable Initialization -->
     <script>
@@ -1121,15 +1141,150 @@ require "config.php";
                     [0, "desc"]
                 ],
             });
+
+            let selectedId = "";
+
+            // Handle dynamically created "Add" buttons using event delegation
+            $('#ncprTable tbody').on('click', '.add-btn', function() {
+                selectedId = $(this).data('id'); // Get the ID from the clicked button
+                console.log("Button clicked, selectedId:", selectedId); // Debugging
+                $("#modal-id").text(selectedId); // Display ID inside modal
+            });
         });
         $(document).ready(function() {
-            // Use event delegation to handle dynamically created elements
-            $('#ncprTable tbody').on('click', '.view-btn', function() {
-                var ncprNum = $(this).data('id'); // Get the ID from the clicked button
+            $(document).ready(function() {
+                console.log("viewModal.js is loaded and running.");
+                $('#ncprTable tbody').on('click', '.view-btn', function() {
+                    var ncprNum = $(this).data('id');
 
-                // AJAX call to fetch full details
+                    $.ajax({
+                        url: 'fetch_ncpr_details.php',
+                        method: 'POST',
+                        data: {
+                            ncpr_num: ncprNum
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            $('#viewModal #view-id').text(response.id);
+                            $('#viewModal #view-initiator').text(response.initiator);
+                            $('#viewModal #view-ncpr-num').text(response.ncpr_num);
+                            $('#viewModal #view-date').text(response.date);
+                            $('#viewModal #view-part-number').text(response.part_number);
+                            $('#viewModal #view-part-name').text(response.part_name);
+                            $('#viewModal #view-process').text(response.process);
+                            $('#viewModal #view-issue').text(response.issue);
+
+                            setCheckboxValue('#viewModal #view-urgent-checkbox', response.urgent);
+                            setCheckboxValue('#viewModal #repeating-yes', response.repeating);
+                            setCheckboxValue('#viewModal #deviation-yes', response.deviation);
+                            setCheckboxValue('#viewModal #view-mcs', response.mcs);
+                            setCheckboxValue('#viewModal #view-customer_notif', response.customer_notif);
+
+                            setRadioButtonValue('viewModal view-recall', response.recall);
+                            setRadioButtonValue('viewModal view-shipment', response.shipment);
+                            setRadioButtonValue('viewModal view-stop_proc', response.stop_proc);
+                            setRadioButtonValue('viewModal view-seven', response.seven);
+
+                            $('#viewModal #view-awpi').text(response.awpi);
+                            $('#viewModal #view-dc').text(response.dc);
+                            $('#viewModal #view-cavity').text(response.cavity);
+                            $('#viewModal #view-machine').text(response.machine);
+
+                            var materialTable = $('#viewModal #material-table tbody');
+                            materialTable.empty();
+
+                            if (response.materials.length > 0) {
+                                response.materials.forEach(function(material) {
+                                    materialTable.append(`
+                            <tr>
+                                <td>${material.ntdj_num}</td>
+                                <td>${material.mns_num}</td>
+                                <td>${material.lot_sublot_qty}</td>
+                                <td>${material.qty_affected} - ${material.qty_affected_text}</td>
+                                <td>${material.defect_rate}%</td>
+                            </tr>
+                        `);
+                                });
+                            } else {
+                                materialTable.append('<tr><td colspan="7">No material records found</td></tr>');
+                            }
+
+                            var filesContainer = $('#viewModal #file-list');
+                            filesContainer.empty();
+
+                            if (response.files.length > 0) {
+                                response.files.forEach(function(file) {
+                                    let fileLink = file.file_type.toLowerCase().match(/jpg|png|jpeg|gif/) ?
+                                        `<img src="${file.file_path}" class="img-thumbnail" style="max-width: 150px; margin: 5px; margin-bottom: 10px;" />` :
+                                        `<a href="${file.file_path}" download="${file.file_name}" class="btn btn-primary btn-sm">
+                                <i class="fa fa-download"></i> Download ${file.file_name}
+                              </a>`;
+                                    filesContainer.append(`<div>${fileLink}</div>`);
+                                });
+                            } else {
+                                filesContainer.append('<p>No files uploaded</p>');
+                            }
+                        },
+                        error: function() {
+                            alert('Failed to fetch data.');
+                        }
+                    });
+                });
+            });
+
+            function setCheckboxValue(selector, value) {
+                $(selector).prop("checked", value === "yes");
+            }
+
+            function setRadioButtonValue(name, value) {
+                if (value === "yes") {
+                    $(`#${name}-yes`).prop("checked", true);
+                    $(`#${name}-no`).prop("checked", false);
+                } else if (value === "no") {
+                    $(`#${name}-yes`).prop("checked", false);
+                    $(`#${name}-no`).prop("checked", true);
+                } else {
+                    $(`#${name}-yes`).prop("checked", false);
+                    $(`#${name}-no`).prop("checked", false);
+                }
+            }
+            $('#ncprTable tbody').on('click', '.submit-btn', function() {
+                var ncprNum = $(this).data('id'); // Get the NCPR number
+                console.log("Clicked add button for NCPR number:", ncprNum);
+
+                // First AJAX to check dispo_id
                 $.ajax({
-                    url: 'fetch_ncpr_details.php', // Your PHP file to fetch full data
+                    url: 'check_dispo.php', // PHP script to check dispo_id
+                    method: 'POST',
+                    data: {
+                        ncpr_num: ncprNum
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        console.log("Checking dispo_id for NCPR number:", ncprNum);
+                    },
+                    success: function(response) {
+                        console.log("AJAX Response from check_dispo.php:", response);
+
+                        if (response.has_dispo) {
+                            console.log("Dispo ID exists for NCPR number:", ncprNum, "- Switching to view-only mode.");
+                            fetchNcprDetails(ncprNum, true);
+                        } else {
+                            console.log("No dispo ID found for NCPR number:", ncprNum, "- Allowing editing.");
+                            fetchNcprDetails(ncprNum, false);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error in AJAX request:", status, error);
+                        console.log("XHR Response:", xhr.responseText);
+                        alert('Failed to check dispo status.');
+                    }
+                });
+            });
+
+            function fetchNcprDetails(ncprNum, viewOnly) {
+                $.ajax({
+                    url: 'fetch_dispo_details.php',
                     method: 'POST',
                     data: {
                         ncpr_num: ncprNum
@@ -1137,147 +1292,97 @@ require "config.php";
                     dataType: 'json',
                     success: function(response) {
                         $('#view-id').text(response.id);
-                        $('#view-initiator').text(response.initiator);
                         $('#view-ncpr-num').text(response.ncpr_num);
-                        $('#view-date').text(response.date);
-                        $('#view-part-number').text(response.part_number);
-                        $('#view-part-name').text(response.part_name);
-                        $('#view-process').text(response.process);
-                        $('#view-issue').text(response.issue);
 
-                        // Set checkbox values
-                        setCheckboxValue('#view-urgent-checkbox', response.urgent);
-                        setCheckboxValue('#repeating-yes', response.repeating);
-                        setCheckboxValue('#deviation-yes', response.deviation);
-                        setCheckboxValue('#view-mcs', response.mcs);
-                        setCheckboxValue('#view-customer_notif', response.customer_notif);
-                        setCheckboxValue('#view-fgparts', response.fgparts);
-                        setCheckboxValue('#view-wip', response.wip);
-                        setCheckboxValue('#view-one', response.one);
-                        setCheckboxValue('#view-one-one', response.one_one);
-                        setCheckboxValue('#view-two', response.two);
-                        setCheckboxValue('#view-three', response.three);
-                        setCheckboxValue('#view-four', response.four);
-                        setCheckboxValue('#view-five', response.five);
-                        setCheckboxValue('#view-six', response.six);
-                        setCheckboxValue('#view-eight', response.eight);
-                        setCheckboxValue('#view-nine', response.nine);
-
-                        // Handle radio buttons for recall, shipment, stop_proc, and seven
-                        setRadioButtonValue('view-recall', response.recall);
-                        setRadioButtonValue('view-shipment', response.shipment);
-                        setRadioButtonValue('view-stop_proc', response.stop_proc);
-                        setRadioButtonValue('view-seven', response.seven);
-
-                        // Handle text fields
-                        $('#view-awpi').text(response.awpi);
-                        $('#view-dc').text(response.dc);
-                        $('#view-cavity').text(response.cavity);
+                        // Disposition Details
+                        $('#view-dispo-name').text(response.dispo_name);
+                        $('#view-method').text(response.method);
                         $('#view-machine').text(response.machine);
-                        $('#view-ref').text(response.ref);
-                        $('#view-bg').text(response.bg);
-                        $('#view-mcs_details').text(response.mcs_details);
-                        $('#view-location').text(response.location);
-                        $('#view-ship_proc').text(response.ship_proc);
-                        $('#view-ship_sched').text(response.ship_sched);
-                        $('#view-two-one').text(response.two_one);
-                        $('#view-three-one').text(response.three_one);
-                        $('#view-seven-one').text(response.seven_one);
-                        $('#view-seven-two').text(response.seven_two);
-                        $('#view-eight-one').text(response.eight_one);
-                        $('#view-nine-one').text(response.nine_one);
 
-                        // Supplier details
-                        $('#view-supplier').text(response.supplier);
-                        $('#view-supplier-part-name').text(response.supplier_part_name);
-                        $('#view-supplier-part-number').text(response.supplier_part_number);
-                        $('#view-invoice-num').text(response.invoice_num);
-                        $('#view-purchase-order').text(response.purchase_order);
+                        // CNC Material Details
+                        $('#view-nfld-item').text(response.nfld_item);
+                        $('#view-nfld-item-pur-item').text(response.nfld_item_pur_item);
+                        $('#view-fe-expired').text(response.FE_expired);
+                        $('#view-local-supp').text(response.local_supp);
+                        $('#view-imi').text(response.imi);
+                        $('#view-pff').text(response.pff);
 
-                        // Show/hide supplier details
-                        if (
-                            !response.supplier &&
-                            !response.supplier_part_name &&
-                            !response.supplier_part_number &&
-                            !response.invoice_num &&
-                            !response.purchase_order
-                        ) {
-                            $('.supplier-details').hide();
+                        // CAR Details
+                        $('#view-car-is-approved').text(response.car_is_approved);
+                        $('#view-car-num-active').text(response.car_num_active);
+                        $('#view-car-num').text(response.car_num);
+                        $('#view-8d-report-active').text(response["8d_report_active"]);
+                        $('#view-scar-active').text(response.scar_active);
+                        $('#view-scar-num').text(response.scar_num);
+
+                        // DRF Details
+                        $('#view-ntpi-active').text(response.NTPI_active);
+                        $('#view-mrb-active').text(response.MRB_active);
+                        $('#view-nfld-active').text(response.NFLD_active);
+                        $('#view-cust-is-approve').text(response.cust_is_approve);
+                        $('#view-doc-alert-num').text(response.doc_alert_num);
+
+                        // Product Disposition Details
+                        setCheckboxValue('#view-use-as-is', response.use_as_isActive);
+                        setCheckboxValue('#view-re-inspection', response.re_inspectionActive);
+                        setCheckboxValue('#view-run-normal', response.run_normalActive);
+                        setCheckboxValue('#view-regrade', response.regrade_Active);
+                        setCheckboxValue('#view-rework', response.rework_Active);
+                        setCheckboxValue('#view-repair', response.repair_Active);
+                        setCheckboxValue('#view-rework-traveler', response.rework_traveler_Active);
+                        setCheckboxValue('#view-scrap', response.scrap_Active);
+                        setCheckboxValue('#view-rtv', response.RTV_Active);
+
+                        $('#view-yield-off').text(response.yield_off);
+                        $('#view-da-no').text(response.da_no);
+                        $('#view-rework-da-no').text(response.rework_da_no);
+                        $('#view-wis-no').text(response.wis_no);
+                        $('#view-scrap-amount').text(response.scrap_amount);
+                        $('#view-shipment-date').text(response.shipment_date);
+
+                        // Additional Disposition Details
+                        $('#view-intervention-id').text(response.intervention_id);
+                        $('#view-rework-type-id').text(response.rework_type_id);
+
+                        // Handling Files
+
+
+                        // View-only mode: Disable form fields
+                        console.log("AJAX Response Data:", response); // Debugging the response
+                        if (viewOnly) {
+                            $('#ncprModal input, #ncprModal textarea, #ncprModal select').prop('disabled', true);
                         } else {
-                            $('.supplier-details').show();
-                        }
-
-                        // Handle material records
-                        var materialTable = $('#material-table tbody');
-                        materialTable.empty();
-
-                        if (response.materials.length > 0) {
-                            response.materials.forEach(function(material) {
-                                materialTable.append(`
-                            <tr>
-                                <td style="font-size: 15px">${material.ntdj_num}</td>
-                                <td style="font-size: 15px">${material.mns_num}</td>
-                                <td style="font-size: 15px">${material.lot_sublot_qty}</td>
-                                <td style="font-size: 15px">${material.qty_affected} - ${material.qty_affected_text}</td>
-                                <td style="font-size: 15px">${material.defect_rate}%</td>
-                            </tr>
-                        `);
-                            });
-                        } else {
-                            materialTable.append(`<tr><td colspan="7">No material records found</td></tr>`);
-                        }
-
-                        // Handle file attachments
-                        var filesContainer = $('#file-list');
-                        filesContainer.empty();
-
-                        if (response.files.length > 0) {
-                            response.files.forEach(function(file) {
-                                let fileLink;
-                                let fileType = file.file_type.toLowerCase();
-
-                                if (['jpg', 'png', 'jpeg', 'gif'].includes(fileType)) {
-                                    // Image preview
-                                    fileLink = `<img src="${file.file_path}" class="img-thumbnail" style="max-width: 150px; margin: 5px; margin-bottom: 10px;" />`;
-                                } else {
-                                    // Download link
-                                    fileLink = `<a href="${file.file_path}" download="${file.file_name}" class="btn btn-primary btn-sm" 
-                                style="margin-bottom: 10px;">
-                                <i class="fa fa-download"></i> Download ${file.file_name}
-                            </a>`;
-                                }
-
-                                filesContainer.append(`<div>${fileLink}</div>`);
-                            });
-                        } else {
-                            filesContainer.append(`<p>No files uploaded</p>`);
+                            $('#ncprModal input, #ncprModal textarea, #ncprModal select').prop('disabled', false);
                         }
                     },
-                    error: function() {
-                        alert('Failed to fetch data.');
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("AJAX Error:", textStatus, errorThrown);
+                        console.error("Response Text:", jqXHR.responseText || "No response from server");
+
+                        alert('Failed to fetch data. Check the console for details.');
                     }
                 });
-            });
-        });
-
-        // Function to set checkbox value
-        function setCheckboxValue(selector, value) {
-            $(selector).prop("checked", value === "yes");
-        }
-
-        // Function to set radio button values
-        function setRadioButtonValue(name, value) {
-            if (value === "yes") {
-                $(`#${name}-yes`).prop("checked", true);
-                $(`#${name}-no`).prop("checked", false);
-            } else if (value === "no") {
-                $(`#${name}-yes`).prop("checked", false);
-                $(`#${name}-no`).prop("checked", true);
-            } else {
-                $(`#${name}-yes`).prop("checked", false);
-                $(`#${name}-no`).prop("checked", false);
             }
-        }
+
+            // Checkbox Setter
+            function setCheckboxValue(selector, value) {
+                $(selector).prop("checked", value === "yes");
+            }
+
+            // Radio Button Setter
+            function setRadioButtonValue(name, value) {
+                if (value === "yes") {
+                    $(`#${name}-yes`).prop("checked", true);
+                    $(`#${name}-no`).prop("checked", false);
+                } else if (value === "no") {
+                    $(`#${name}-yes`).prop("checked", false);
+                    $(`#${name}-no`).prop("checked", true);
+                } else {
+                    $(`#${name}-yes`).prop("checked", false);
+                    $(`#${name}-no`).prop("checked", false);
+                }
+            }
+        });
     </script>
 
     <script>

@@ -1,22 +1,22 @@
 <?php
 session_start();
 if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "ADMIN" && $_SESSION["role"] !== "STAFF") {
-        header("Location: loginform.php");
-        exit();
-    }
+    header("Location: loginform.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <title>admin Dashboard</title>
-    
+
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/all.min.css">
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/fontawesome.min.css">
     <link rel="stylesheet" href="assets/DataTables/datatables.min.css" />
     <link rel="stylesheet" href="assets/css/sweetalert2.min.css">
-    
+
 </head>
 <style>
     ::after,

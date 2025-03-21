@@ -1,0 +1,94 @@
+$(document).ready(function() {
+    console.log("viewModal.js is loaded and running.");
+    $('#ncprTable tbody').on('click', '.view-btn', function() {
+        var ncprNum = $(this).data('id');
+
+        $.ajax({
+            url: 'fetch_ncpr_details.php',
+            method: 'POST',
+            data: { ncpr_num: ncprNum },
+            dataType: 'json',
+            success: function(response) {
+                $('#viewModal #view-id').text(response.id);
+                $('#viewModal #view-initiator').text(response.initiator);
+                $('#viewModal #view-ncpr-num').text(response.ncpr_num);
+                $('#viewModal #view-date').text(response.date);
+                $('#viewModal #view-part-number').text(response.part_number);
+                $('#viewModal #view-part-name').text(response.part_name);
+                $('#viewModal #view-process').text(response.process);
+                $('#viewModal #view-issue').text(response.issue);
+
+                setCheckboxValue('#viewModal #view-urgent-checkbox', response.urgent);
+                setCheckboxValue('#viewModal #repeating-yes', response.repeating);
+                setCheckboxValue('#viewModal #deviation-yes', response.deviation);
+                setCheckboxValue('#viewModal #view-mcs', response.mcs);
+                setCheckboxValue('#viewModal #view-customer_notif', response.customer_notif);
+                
+                setRadioButtonValue('viewModal view-recall', response.recall);
+                setRadioButtonValue('viewModal view-shipment', response.shipment);
+                setRadioButtonValue('viewModal view-stop_proc', response.stop_proc);
+                setRadioButtonValue('viewModal view-seven', response.seven);
+                
+                $('#viewModal #view-awpi').text(response.awpi);
+                $('#viewModal #view-dc').text(response.dc);
+                $('#viewModal #view-cavity').text(response.cavity);
+                $('#viewModal #view-machine').text(response.machine);
+                
+                var materialTable = $('#viewModal #material-table tbody');
+                materialTable.empty();
+
+                if (response.materials.length > 0) {
+                    response.materials.forEach(function(material) {
+                        materialTable.append(`
+                            <tr>
+                                <td>${material.ntdj_num}</td>
+                                <td>${material.mns_num}</td>
+                                <td>${material.lot_sublot_qty}</td>
+                                <td>${material.qty_affected} - ${material.qty_affected_text}</td>
+                                <td>${material.defect_rate}%</td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    materialTable.append('<tr><td colspan="7">No material records found</td></tr>');
+                }
+
+                var filesContainer = $('#viewModal #file-list');
+                filesContainer.empty();
+
+                if (response.files.length > 0) {
+                    response.files.forEach(function(file) {
+                        let fileLink = file.file_type.toLowerCase().match(/jpg|png|jpeg|gif/)
+                            ? `<img src="${file.file_path}" class="img-thumbnail" style="max-width: 150px; margin: 5px; margin-bottom: 10px;" />`
+                            : `<a href="${file.file_path}" download="${file.file_name}" class="btn btn-primary btn-sm">
+                                <i class="fa fa-download"></i> Download ${file.file_name}
+                              </a>`;
+                        filesContainer.append(`<div>${fileLink}</div>`);
+                    });
+                } else {
+                    filesContainer.append('<p>No files uploaded</p>');
+                }
+            },
+            error: function() {
+                alert('Failed to fetch data.');
+            }
+        });
+    });
+});
+
+function setCheckboxValue(selector, value) {
+    $(selector).prop("checked", value === "yes");
+}
+
+function setRadioButtonValue(name, value) {
+    if (value === "yes") {
+        $(`#${name}-yes`).prop("checked", true);
+        $(`#${name}-no`).prop("checked", false);
+    } else if (value === "no") {
+        $(`#${name}-yes`).prop("checked", false);
+        $(`#${name}-no`).prop("checked", true);
+    } else {
+        $(`#${name}-yes`).prop("checked", false);
+        $(`#${name}-no`).prop("checked", false);
+    }
+}

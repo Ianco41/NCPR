@@ -258,40 +258,14 @@ $result = $conn->query($query);
                                     <button class="btn btn-info btn-sm view-btn" data-id="<?php echo $row['ncpr_num']; ?>" data-bs-toggle="modal" data-bs-target="#viewModal">
                                         View
                                     </button>
+                                    <button type="button" class="btn btn-info btn-sm view-btn" data-toggle="modal" data-target="#dispoModal">
+                                        View Dispo
+                                    </button>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
                 </table>
-            </div>
-
-            <!-- Add Modal -->
-            <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addModalLabel">Add New Record</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="addForm" action="process_add.php" method="POST">
-                                <div class="mb-3">
-                                    <label for="ncpr_num" class="form-label">NCPR Number</label>
-                                    <input type="text" class="form-control" id="add_ncpr_num" name="ncpr_num" readonly required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="part_name" class="form-label">Part Name</label>
-                                    <input type="text" class="form-control" id="part_name" name="part_name" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="part_number" class="form-label">Part Number</label>
-                                    <input type="text" class="form-control" id="part_number" name="part_number" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Save Record</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- View Modal -->
@@ -959,6 +933,12 @@ $result = $conn->query($query);
             </div>
         </div>
     </div>
+
+    <?php if (file_exists('modal_dispo.php')) {
+    include 'modal_dispo.php';
+} else {
+    echo "<p>Modal file not found!</p>";
+} ?>
     <script src="assets/vendor/bootstrap/js/jquery.min.js"></script>
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/bootstrap/js/all.min.js"></script>
@@ -1371,6 +1351,8 @@ $result = $conn->query($query);
                 }]
             }); // Initialize DataTable for sorting, searching, and pagination
         });
+
+        
     </script>
     <script>
         const hamBurger = document.querySelector(".toggle-btn");

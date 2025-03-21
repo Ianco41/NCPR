@@ -974,65 +974,92 @@ $name = $_SESSION["user"];
             });
         });
 
-        document.getElementById("ncprForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent default form submission
+        document.addEventListener("DOMContentLoaded", function () {
+    let ncprForm = document.getElementById("ncprForm");
+    
+    if (!ncprForm) {
+        console.error("Error: #ncprForm not found in the DOM!");
+        return;
+    }
 
-            let formData = new FormData(this); // Get form data
-            let originalNcprNum = document.getElementById("ncpr_num").value; // Store original ncpr_num
+    ncprForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default form submission
 
-            fetch("insert.php", {
-                    method: "POST",
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        if (data.new_ncpr_num && data.new_ncpr_num !== originalNcprNum) {
-                            // Notify user that the NCPR number has changed
-                            Swal.fire({
-                                title: "Notice!",
-                                text: "Your NCPR number has been updated to " + data.new_ncpr_num + " because the previous number was taken.",
-                                icon: "info",
-                                confirmButtonText: "OK"
-                            }).then(() => {
-                                document.getElementById("ncpr_num").value = data.new_ncpr_num; // Update field
-                                window.location.href = "guest_ncprfiling.php"; // Redirect after acknowledging
-                            });
-                        } else {
-                            Swal.fire({
-                                title: "Success!",
-                                text: "Data successfully inserted!",
-                                icon: "success",
-                                confirmButtonText: "OK"
-                            }).then(() => {
-                                window.location.href = "guest_ncprfiling.php"; // Redirect after clicking OK
-                            });
-                        }
+        let formData = new FormData(this); // Get form data
+        let originalNcprNum = document.getElementById("ncpr_num").value; // Store original NCPR number
+
+        fetch("insert.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => {
+            console.log("Raw response status:", response.status);
+            return response.text(); // Get raw text response for debugging
+        })
+        .then(text => {
+            console.log("Raw Response:", text); // Log the raw response
+
+            try {
+                let data = JSON.parse(text); // Attempt to parse JSON
+                console.log("Parsed JSON:", data); // Log parsed data
+                
+                if (data.status === "success") {
+                    if (data.new_ncpr_num && data.new_ncpr_num !== originalNcprNum) {
+                        Swal.fire({
+                            title: "Notice!",
+                            text: "Your NCPR number has been updated to " + data.new_ncpr_num + " because the previous number was taken.",
+                            icon: "info",
+                            confirmButtonText: "OK"
+                        }).then(() => {
+                            document.getElementById("ncpr_num").value = data.new_ncpr_num; // Update field
+                            window.location.href = "guest_ncprfiling.php"; // Redirect after acknowledging
+                        });
                     } else {
                         Swal.fire({
-                            title: "Error!",
-                            text: data.message,
-                            icon: "error",
+                            title: "Success!",
+                            text: "Data successfully inserted!",
+                            icon: "success",
                             confirmButtonText: "OK"
+                        }).then(() => {
+                            window.location.href = "guest_ncprfiling.php"; // Redirect after clicking OK
                         });
                     }
-                })
-                .catch(error => {
-                    console.error("Fetch error:", error);
+                } else {
                     Swal.fire({
                         title: "Error!",
-                        text: "An unexpected error occurred.",
+                        text: data.message || "An unexpected error occurred.",
                         icon: "error",
                         confirmButtonText: "OK"
                     });
+                }
+            } catch (jsonError) {
+                console.error("JSON Parsing Error:", jsonError);
+                Swal.fire({
+                    title: "Error!",
+                    text: "Invalid server response. Check console for details.",
+                    icon: "error",
+                    confirmButtonText: "OK"
                 });
+            }
+        })
+        .catch(error => {
+            console.error("Fetch error:", error);
+            Swal.fire({
+                title: "Error!",
+                text: "An unexpected error occurred.",
+                icon: "error",
+                confirmButtonText: "OK"
+            });
         });
+    });
+});
 
+/** Auto-expand textarea */
+function autoExpand(textarea) {
+    textarea.style.height = "auto"; // Reset height
+    textarea.style.height = textarea.scrollHeight + "px"; // Set new height
+}
 
-        function autoExpand(textarea) {
-            textarea.style.height = "auto"; // Reset height
-            textarea.style.height = textarea.scrollHeight + "px"; // Set new height
-        }
     </script>
 </body>
 

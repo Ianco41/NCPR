@@ -1084,6 +1084,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/viewmodal.js"></script>
+    <script src="assets/js/approval.js"></script>
 
     <!-- DataTable Initialization -->
     <script>
@@ -1135,159 +1137,69 @@
             });
         });
         $(document).ready(function() {
-            // Use event delegation to handle dynamically created elements
-            $('#ncprTable tbody').on('click', '.view-btn', function() {
-                var ncprNum = $(this).data('id'); // Get the ID from the clicked button
+            $('#ncprTable tbody').on('click', '.dispo-btn', function() {
+                var ncprNum = $(this).data('id');
 
-                // AJAX call to fetch full details
                 $.ajax({
-                    url: 'fetch_ncpr_details.php', // Your PHP file to fetch full data
+                    url: 'fetch_dispo_details.php', // New PHP script to fetch dispo_id
                     method: 'POST',
                     data: {
                         ncpr_num: ncprNum
                     },
                     dataType: 'json',
                     success: function(response) {
-                        $('#view-id').text(response.id);
-                        $('#view-initiator').text(response.initiator);
-                        $('#view-ncpr-num').text(response.ncpr_num);
-                        $('#view-date').text(response.date);
-                        $('#view-part-number').text(response.part_number);
-                        $('#view-part-name').text(response.part_name);
-                        $('#view-process').text(response.process);
-                        $('#view-issue').text(response.issue);
-
-                        // Set checkbox values
-                        setCheckboxValue('#view-urgent-checkbox', response.urgent);
-                        setCheckboxValue('#repeating-yes', response.repeating);
-                        setCheckboxValue('#deviation-yes', response.deviation);
-                        setCheckboxValue('#view-mcs', response.mcs);
-                        setCheckboxValue('#view-customer_notif', response.customer_notif);
-                        setCheckboxValue('#view-fgparts', response.fgparts);
-                        setCheckboxValue('#view-wip', response.wip);
-                        setCheckboxValue('#view-one', response.one);
-                        setCheckboxValue('#view-one-one', response.one_one);
-                        setCheckboxValue('#view-two', response.two);
-                        setCheckboxValue('#view-three', response.three);
-                        setCheckboxValue('#view-four', response.four);
-                        setCheckboxValue('#view-five', response.five);
-                        setCheckboxValue('#view-six', response.six);
-                        setCheckboxValue('#view-eight', response.eight);
-                        setCheckboxValue('#view-nine', response.nine);
-
-                        // Handle radio buttons for recall, shipment, stop_proc, and seven
-                        setRadioButtonValue('view-recall', response.recall);
-                        setRadioButtonValue('view-shipment', response.shipment);
-                        setRadioButtonValue('view-stop_proc', response.stop_proc);
-                        setRadioButtonValue('view-seven', response.seven);
-
-                        // Handle text fields
-                        $('#view-awpi').text(response.awpi);
-                        $('#view-dc').text(response.dc);
-                        $('#view-cavity').text(response.cavity);
-                        $('#view-machine').text(response.machine);
-                        $('#view-ref').text(response.ref);
-                        $('#view-bg').text(response.bg);
-                        $('#view-mcs_details').text(response.mcs_details);
-                        $('#view-location').text(response.location);
-                        $('#view-ship_proc').text(response.ship_proc);
-                        $('#view-ship_sched').text(response.ship_sched);
-                        $('#view-two-one').text(response.two_one);
-                        $('#view-three-one').text(response.three_one);
-                        $('#view-seven-one').text(response.seven_one);
-                        $('#view-seven-two').text(response.seven_two);
-                        $('#view-eight-one').text(response.eight_one);
-                        $('#view-nine-one').text(response.nine_one);
-
-                        // Supplier details
-                        $('#view-supplier').text(response.supplier);
-                        $('#view-supplier-part-name').text(response.supplier_part_name);
-                        $('#view-supplier-part-number').text(response.supplier_part_number);
-                        $('#view-invoice-num').text(response.invoice_num);
-                        $('#view-purchase-order').text(response.purchase_order);
-
-                        // Show/hide supplier details
-                        if (
-                            !response.supplier &&
-                            !response.supplier_part_name &&
-                            !response.supplier_part_number &&
-                            !response.invoice_num &&
-                            !response.purchase_order
-                        ) {
-                            $('.supplier-details').hide();
+                        if (response.dispo_id) {
+                            // If dispo_id exists, disable inputs
+                            $('#dispoModal input, #dispoModal select, #dispoModal textarea').prop('disabled', true);
                         } else {
-                            $('.supplier-details').show();
+                            // If dispo_id does not exist, allow user input
+                            $('#dispoModal input, #dispoModal select, #dispoModal textarea').prop('disabled', false);
                         }
 
-                        // Handle material records
-                        var materialTable = $('#material-table tbody');
-                        materialTable.empty();
+                        // Populate fields with existing data
+                        $('#modal-id').text(response.ncpr_num);
+                        $('#non-conformance').val(response.non_conformance);
+                        $('input[name="corrective_action"][value="' + response.corrective_action + '"]').prop('checked', true);
 
-                        if (response.materials.length > 0) {
-                            response.materials.forEach(function(material) {
-                                materialTable.append(`
-                            <tr>
-                                <td style="font-size: 15px">${material.ntdj_num}</td>
-                                <td style="font-size: 15px">${material.mns_num}</td>
-                                <td style="font-size: 15px">${material.lot_sublot_qty}</td>
-                                <td style="font-size: 15px">${material.qty_affected} - ${material.qty_affected_text}</td>
-                                <td style="font-size: 15px">${material.defect_rate}%</td>
-                            </tr>
-                        `);
-                            });
-                        } else {
-                            materialTable.append(`<tr><td colspan="7">No material records found</td></tr>`);
-                        }
+                        // Populate checkboxes
+                        setCheckboxValue('input[name="car"]', response.car);
+                        setCheckboxValue('input[name="scar"]', response.scar);
 
-                        // Handle file attachments
-                        var filesContainer = $('#file-list');
-                        filesContainer.empty();
+                        // Populate text fields
+                        $('input[name="car_no"]').val(response.car_no);
+                        $('input[name="scar_no"]').val(response.scar_no);
+                        $('input[name="id_no"]').val(response.id_no);
+                        $('input[name="name"]').val(response.name);
 
-                        if (response.files.length > 0) {
-                            response.files.forEach(function(file) {
-                                let fileLink;
-                                let fileType = file.file_type.toLowerCase();
+                        // Populate multiple checkboxes
+                        $('input[name="cause[]"]').prop('checked', false);
+                        response.causes.forEach(function(cause) {
+                            $('input[name="cause[]"][value="' + cause + '"]').prop('checked', true);
+                        });
 
-                                if (['jpg', 'png', 'jpeg', 'gif'].includes(fileType)) {
-                                    // Image preview
-                                    fileLink = `<img src="${file.file_path}" class="img-thumbnail" style="max-width: 150px; margin: 5px; margin-bottom: 10px;" />`;
-                                } else {
-                                    // Download link
-                                    fileLink = `<a href="${file.file_path}" download="${file.file_name}" class="btn btn-primary btn-sm" 
-                                style="margin-bottom: 10px;">
-                                <i class="fa fa-download"></i> Download ${file.file_name}
-                            </a>`;
-                                }
+                        // Handle radio buttons
+                        setRadioButtonValue('potential_failure', response.potential_failure);
+                        setRadioButtonValue('bd_report', response.bd_report);
 
-                                filesContainer.append(`<div>${fileLink}</div>`);
-                            });
-                        } else {
-                            filesContainer.append(`<p>No files uploaded</p>`);
-                        }
+                        $('#dispoModal').modal('show');
                     },
                     error: function() {
-                        alert('Failed to fetch data.');
+                        alert('Failed to fetch disposition data.');
                     }
                 });
             });
         });
 
-        // Function to set checkbox value
+        // Utility functions
         function setCheckboxValue(selector, value) {
             $(selector).prop("checked", value === "yes");
         }
 
-        // Function to set radio button values
         function setRadioButtonValue(name, value) {
             if (value === "yes") {
-                $(`#${name}-yes`).prop("checked", true);
-                $(`#${name}-no`).prop("checked", false);
-            } else if (value === "no") {
-                $(`#${name}-yes`).prop("checked", false);
-                $(`#${name}-no`).prop("checked", true);
+                $('input[name="' + name + '"][value="yes"]').prop("checked", true);
             } else {
-                $(`#${name}-yes`).prop("checked", false);
-                $(`#${name}-no`).prop("checked", false);
+                $('input[name="' + name + '"][value="no"]').prop("checked", true);
             }
         }
     </script>

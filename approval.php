@@ -27,7 +27,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ncpr_num = $_POST['ncpr_num'] ?? '';
 
     if (empty($action) || empty($role) || empty($ncpr_num)) {
-        echo json_encode(["status" => "error", "message" => "Missing required parameters."]);
+        echo json_encode([
+            "status" => "error",
+            "message" => "Missing required parameters.",
+            "data" => [
+                "action" => $action,
+                "role" => $role,
+                "ncpr_num" => $ncpr_num
+            ]
+        ]);
         exit;
     }
 
@@ -68,32 +76,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->begin_transaction(); // Begin Transaction
 
         // Step 1: Insert into prod_dispo_tbl (Get $prod_dispo_id)
-        include "insert_prod_dispo.php";
-        if (!$prod_dispo_id) {
+        ob_start(); // Prevent unwanted output
+        $prod_dispo_id = include "insert_prod_dispo.php";
+        ob_end_clean(); // Clear any accidental output
+
+        if (!is_numeric($prod_dispo_id)) {
             throw new Exception("Failed to insert into prod_dispo_tbl");
         }
 
         // Step 2: Insert into drf_tbl with prod_dispo_id
-        include "insert_drf.php";
-        if (!$DRF_id) {
+        ob_start();
+        $DRF_id = include "insert_drf.php";
+        ob_end_clean();
+        if (!is_numeric($DRF_id)) {
             throw new Exception("Failed to insert into drf_tbl");
         }
 
         // Step 3: Insert into car_tbl with DRF_id
-        include "insert_car.php";
-        if (!$CAR_id) {
+        ob_start();
+        $CAR_id = include "insert_car.php";
+        ob_end_clean();
+        if (!is_numeric($CAR_id)) {
             throw new Exception("Failed to insert into car_tbl");
         }
 
         // Step 4: Insert into cnc_mat_tbl with CAR_id
-        include "insert_cnc.php";
-        if (!$CNC_mat_id) {
+        ob_start();
+        $CNC_mat_id = include "insert_cnc_mat.php";
+        ob_end_clean();
+        if (!is_numeric($CNC_mat_id)) {
             throw new Exception("Failed to insert into cnc_mat_tbl");
         }
 
         // Step 5: Insert into dispo_table with CNC_mat_id
-        include "insert_dispo.php";
-        if (!$dispo_id) {
+        ob_start();
+        $dispo_id = include "insert_dispo.php";
+        ob_end_clean();
+        if (!is_numeric($dispo_id)) {
             throw new Exception("Failed to insert into dispo_table");
         }
 
@@ -110,22 +129,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Step 7: Update dispo_id in ncpr_table
         $stmt = $conn->prepare("UPDATE ncpr_table SET dispo_id = ? WHERE ncpr_num = ?");
-        $stmt->bind_param("is", $dispo_sitioned_id, $ncpr_id);
+        $stmt->bind_param("is", $dispo_id, $ncpr_id);
 
         if (!$stmt->execute()) {
             throw new Exception("Failed to update ncpr_table.");
         }
-        $stmt->close();
 
         $conn->commit(); // Commit transaction
 
-        echo json_encode(["status" => "success", "message" => "All data inserted successfully!"]);
-
+        // Example response
+        $response = ["status" => "success", "message" => "All data inserted successfully!"];
+        ob_clean(); // Clean any prior output
+        echo json_encode($response);
     } catch (Exception $e) {
         $conn->rollback(); // Rollback in case of error
         echo json_encode(["status" => "error", "message" => $e->getMessage()]);
     }
+    $stmt->close();
 
     $conn->close();
 }
-?>

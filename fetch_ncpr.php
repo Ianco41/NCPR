@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); // Enable error reporting
 
 try {
-    $sql = "SELECT id, ncpr_num, initiator, status, `date` FROM ncpr_table"; // Ensure `date` is correctly referenced
+    $sql = "SELECT id, ncpr_num, initiator, status, `date` FROM ncpr_table WHERE dispo_id IS NULL"; // Ensure `date` is correctly referenced
     $result = $conn->query($sql);
 
     $data = [];

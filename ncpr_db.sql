@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 20, 2025 at 09:02 AM
+-- Generation Time: Mar 20, 2025 at 11:45 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,139 @@ SET time_zone = "+00:00";
 --
 -- Database: `ncpr_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `car_tbl`
+--
+
+CREATE TABLE `car_tbl` (
+  `id` int(11) NOT NULL,
+  `car_is_approved` tinyint(1) DEFAULT 0,
+  `car_num_active` tinyint(1) DEFAULT 0,
+  `car_num` varchar(255) DEFAULT NULL,
+  `8d_report_active` varchar(255) DEFAULT NULL,
+  `scar_active` tinyint(1) DEFAULT 0,
+  `scar_num` varchar(255) DEFAULT NULL,
+  `DRF_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `car_tbl`
+--
+
+INSERT INTO `car_tbl` (`id`, `car_is_approved`, `car_num_active`, `car_num`, `8d_report_active`, `scar_active`, `scar_num`, `DRF_id`, `created_at`, `updated_at`) VALUES
+(1, 0, 0, NULL, NULL, 0, NULL, 6, '2025-03-20 10:33:19', '2025-03-20 10:33:19'),
+(2, 0, 0, NULL, NULL, 0, NULL, 7, '2025-03-20 10:36:12', '2025-03-20 10:36:12'),
+(3, 0, 0, NULL, NULL, 0, NULL, 8, '2025-03-20 10:44:52', '2025-03-20 10:44:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cnc_mat_tbl`
+--
+
+CREATE TABLE `cnc_mat_tbl` (
+  `id` int(11) NOT NULL,
+  `nfld_item` tinyint(1) DEFAULT 0,
+  `nfld_item_pur_item` tinyint(1) DEFAULT 0,
+  `FE_expired` tinyint(1) DEFAULT 0,
+  `local_supp` tinyint(1) DEFAULT 0,
+  `imi` tinyint(1) DEFAULT 0,
+  `pff` varchar(255) DEFAULT NULL,
+  `CAR_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cnc_mat_tbl`
+--
+
+INSERT INTO `cnc_mat_tbl` (`id`, `nfld_item`, `nfld_item_pur_item`, `FE_expired`, `local_supp`, `imi`, `pff`, `CAR_id`, `created_at`, `updated_at`) VALUES
+(1, 0, 0, 0, 0, 0, NULL, 2, '2025-03-20 10:36:13', '2025-03-20 10:36:13'),
+(2, 0, 0, 0, 0, 0, NULL, 3, '2025-03-20 10:44:52', '2025-03-20 10:44:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dispo_sitioned`
+--
+
+CREATE TABLE `dispo_sitioned` (
+  `id` int(11) NOT NULL,
+  `status` varchar(50) NOT NULL,
+  `approved_id` int(11) NOT NULL,
+  `approved_role` varchar(50) NOT NULL,
+  `action_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dispo_sitioned`
+--
+
+INSERT INTO `dispo_sitioned` (`id`, `status`, `approved_id`, `approved_role`, `action_date`) VALUES
+(1, 'Approve', 1, 'ENGINEER', '2025-03-20 18:44:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dispo_table`
+--
+
+CREATE TABLE `dispo_table` (
+  `id` int(11) NOT NULL,
+  `QAVCIA` varchar(255) DEFAULT NULL,
+  `man` tinyint(1) DEFAULT 0,
+  `man_id_num` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `method` tinyint(1) DEFAULT 0,
+  `machine` tinyint(1) DEFAULT 0,
+  `CNC_mat_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dispo_table`
+--
+
+INSERT INTO `dispo_table` (`id`, `QAVCIA`, `man`, `man_id_num`, `name`, `method`, `machine`, `CNC_mat_id`, `created_at`, `updated_at`) VALUES
+(1, NULL, 0, NULL, NULL, 0, 0, 1, '2025-03-20 10:36:13', '2025-03-20 10:36:13'),
+(2, NULL, 0, NULL, NULL, 0, 0, 2, '2025-03-20 10:44:52', '2025-03-20 10:44:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `drf_tbl`
+--
+
+CREATE TABLE `drf_tbl` (
+  `id` int(11) NOT NULL,
+  `NTPI_active` tinyint(1) DEFAULT 0,
+  `MRB_active` varchar(255) DEFAULT NULL,
+  `NFLD_active` tinyint(1) DEFAULT 0,
+  `cust_is_approve` varchar(255) DEFAULT NULL,
+  `doc_alert_num` varchar(255) DEFAULT NULL,
+  `prod_dispo_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `drf_tbl`
+--
+
+INSERT INTO `drf_tbl` (`id`, `NTPI_active`, `MRB_active`, `NFLD_active`, `cust_is_approve`, `doc_alert_num`, `prod_dispo_id`, `created_at`, `updated_at`) VALUES
+(3, 0, NULL, 0, NULL, NULL, 6, '2025-03-20 10:29:01', '2025-03-20 10:29:01'),
+(4, 0, NULL, 0, NULL, NULL, 7, '2025-03-20 10:30:11', '2025-03-20 10:30:11'),
+(5, 0, NULL, 0, NULL, NULL, 8, '2025-03-20 10:31:27', '2025-03-20 10:31:27'),
+(6, 0, NULL, 0, NULL, NULL, 9, '2025-03-20 10:33:19', '2025-03-20 10:33:19'),
+(7, 0, NULL, 0, NULL, NULL, 10, '2025-03-20 10:36:12', '2025-03-20 10:36:12'),
+(8, 0, NULL, 0, NULL, NULL, 11, '2025-03-20 10:44:52', '2025-03-20 10:44:52');
 
 -- --------------------------------------------------------
 
@@ -44,6 +177,25 @@ CREATE TABLE `fomo` (
 INSERT INTO `fomo` (`fomo_id`, `supplier`, `supplier_part_name`, `supplier_part_number`, `invoice_num`, `purchase_order`, `ncpr_id`) VALUES
 (16, 'afs', 'Rane', 'fsf', 1352, 0, 101),
 (17, 'AD', 'ASD', 'ASD', 0, 0, 107);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `key_person`
+--
+
+CREATE TABLE `key_person` (
+  `id` int(11) NOT NULL,
+  `fname` varchar(50) NOT NULL,
+  `lname` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `key_person`
+--
+
+INSERT INTO `key_person` (`id`, `fname`, `lname`) VALUES
+(1, 'QA', 'Engineer');
 
 -- --------------------------------------------------------
 
@@ -154,7 +306,7 @@ INSERT INTO `ncpr_table` (`id`, `initiator`, `ncpr_num`, `date`, `part_number`, 
 (104, 'ASDAS', '25-0005', '2025-03-17', '1234', 'amsdnsad', 'asdas', 'off', 'open', 'asd', '', '', '', '', '', '', 'asd', 'asd', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 6),
 (105, 'ADASD', '25-0006', '2025-03-17', '123', '1', 'sadsa', 'off', 'open', 'sadsafdsf', '', '', '', '', '', '', 'dsfd', 'dfsfd', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 6),
 (106, 'ASDR', '25-0007', '2025-03-17', '187303-001', 'AB MIKRO', 'ASD', 'off', 'open', 'ASD', '', '', '', '', '', '', 'ASD', 'ASD', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 6),
-(107, 'CADO', '25-0008', '2025-03-17', '187306-001', 'AB MIKRO', '213QSA', 'on', 'open', 'ASDAS', '', '', '', '', '', '', 'ASDASD', 'SADSA', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 10);
+(107, 'CADO', '25-0008', '2025-03-17', '187306-001', 'AB MIKRO', '213QSA', 'on', 'open', 'ASDAS', '', '', '', '', '', '', 'ASDASD', 'SADSA', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 1);
 
 -- --------------------------------------------------------
 
@@ -1088,6 +1240,52 @@ INSERT INTO `product_list` (`product_id`, `part_number`, `part_name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `prod_dispo_tbl`
+--
+
+CREATE TABLE `prod_dispo_tbl` (
+  `id` int(11) NOT NULL,
+  `use_as_isActive` tinyint(1) DEFAULT 0,
+  `re_inspectionActive` tinyint(1) DEFAULT 0,
+  `run_normalActive` tinyint(1) DEFAULT 0,
+  `regrade_Active` tinyint(1) DEFAULT 0,
+  `rework_Active` tinyint(1) DEFAULT 0,
+  `repair_Active` tinyint(1) DEFAULT 0,
+  `rework_traveler_Active` tinyint(1) DEFAULT 0,
+  `scrap_Active` tinyint(1) DEFAULT 0,
+  `RTV_Active` tinyint(1) DEFAULT 0,
+  `yield_off` varchar(255) DEFAULT NULL,
+  `da_no` varchar(255) DEFAULT NULL,
+  `rework_da_no` varchar(255) DEFAULT NULL,
+  `wis_no` varchar(255) DEFAULT NULL,
+  `scrap_amount` decimal(10,2) DEFAULT NULL,
+  `shipment_date` date DEFAULT NULL,
+  `intervention_id` int(11) DEFAULT NULL,
+  `rework_type_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `prod_dispo_tbl`
+--
+
+INSERT INTO `prod_dispo_tbl` (`id`, `use_as_isActive`, `re_inspectionActive`, `run_normalActive`, `regrade_Active`, `rework_Active`, `repair_Active`, `rework_traveler_Active`, `scrap_Active`, `RTV_Active`, `yield_off`, `da_no`, `rework_da_no`, `wis_no`, `scrap_amount`, `shipment_date`, `intervention_id`, `rework_type_id`, `created_at`, `updated_at`) VALUES
+(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-03-20 10:21:08', '2025-03-20 10:21:08'),
+(2, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-03-20 10:22:06', '2025-03-20 10:22:06'),
+(3, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-03-20 10:22:35', '2025-03-20 10:22:35'),
+(4, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-03-20 10:25:23', '2025-03-20 10:25:23'),
+(5, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-03-20 10:27:36', '2025-03-20 10:27:36'),
+(6, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-03-20 10:29:01', '2025-03-20 10:29:01'),
+(7, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-03-20 10:30:11', '2025-03-20 10:30:11'),
+(8, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-03-20 10:31:27', '2025-03-20 10:31:27'),
+(9, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-03-20 10:33:19', '2025-03-20 10:33:19'),
+(10, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-03-20 10:36:12', '2025-03-20 10:36:12'),
+(11, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-03-20 10:44:52', '2025-03-20 10:44:52');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `register`
 --
 
@@ -1108,6 +1306,28 @@ INSERT INTO `register` (`user_id`, `email`, `first_name`, `last_name`, `pwd`, `o
 (1, 'jr.gerardo14@gmail.com', 'John', 'Doe', '123456', '815030'),
 (2, 'gerardocabojr@gmail.com', 'Alice', 'Smith', 'abcdef', '272532'),
 (3, 'user3@example.com', 'Bob', 'Johnson', 'password', '654321');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rework_type_tbl`
+--
+
+CREATE TABLE `rework_type_tbl` (
+  `id` int(11) NOT NULL,
+  `type` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `rework_type_tbl`
+--
+
+INSERT INTO `rework_type_tbl` (`id`, `type`) VALUES
+(3, 'Re-Etest'),
+(4, 'Re-measure'),
+(2, 'Re-plate'),
+(1, 'Re-press'),
+(5, 'Rework Traveler');
 
 -- --------------------------------------------------------
 
@@ -1231,11 +1451,51 @@ INSERT INTO `users_roles` (`id`, `name`) VALUES
 --
 
 --
+-- Indexes for table `car_tbl`
+--
+ALTER TABLE `car_tbl`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `DRF_id` (`DRF_id`);
+
+--
+-- Indexes for table `cnc_mat_tbl`
+--
+ALTER TABLE `cnc_mat_tbl`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `CAR_id` (`CAR_id`);
+
+--
+-- Indexes for table `dispo_sitioned`
+--
+ALTER TABLE `dispo_sitioned`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `dispo_table`
+--
+ALTER TABLE `dispo_table`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `CNC_mat_id` (`CNC_mat_id`);
+
+--
+-- Indexes for table `drf_tbl`
+--
+ALTER TABLE `drf_tbl`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `prod_dispo_id` (`prod_dispo_id`);
+
+--
 -- Indexes for table `fomo`
 --
 ALTER TABLE `fomo`
   ADD PRIMARY KEY (`fomo_id`),
   ADD KEY `fk_ncpr_id` (`ncpr_id`);
+
+--
+-- Indexes for table `key_person`
+--
+ALTER TABLE `key_person`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `material`
@@ -1277,10 +1537,24 @@ ALTER TABLE `product_list`
   ADD PRIMARY KEY (`product_id`);
 
 --
+-- Indexes for table `prod_dispo_tbl`
+--
+ALTER TABLE `prod_dispo_tbl`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `rework_type_id` (`rework_type_id`);
+
+--
 -- Indexes for table `register`
 --
 ALTER TABLE `register`
   ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indexes for table `rework_type_tbl`
+--
+ALTER TABLE `rework_type_tbl`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `type` (`type`);
 
 --
 -- Indexes for table `uploaded_file`
@@ -1321,10 +1595,46 @@ ALTER TABLE `users_roles`
 --
 
 --
+-- AUTO_INCREMENT for table `car_tbl`
+--
+ALTER TABLE `car_tbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `cnc_mat_tbl`
+--
+ALTER TABLE `cnc_mat_tbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `dispo_sitioned`
+--
+ALTER TABLE `dispo_sitioned`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `dispo_table`
+--
+ALTER TABLE `dispo_table`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `drf_tbl`
+--
+ALTER TABLE `drf_tbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `fomo`
 --
 ALTER TABLE `fomo`
   MODIFY `fomo_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `key_person`
+--
+ALTER TABLE `key_person`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `material`
@@ -1363,10 +1673,22 @@ ALTER TABLE `product_list`
   MODIFY `product_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=874;
 
 --
+-- AUTO_INCREMENT for table `prod_dispo_tbl`
+--
+ALTER TABLE `prod_dispo_tbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- AUTO_INCREMENT for table `register`
 --
 ALTER TABLE `register`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `rework_type_tbl`
+--
+ALTER TABLE `rework_type_tbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `uploaded_file`
@@ -1403,6 +1725,30 @@ ALTER TABLE `users_roles`
 --
 
 --
+-- Constraints for table `car_tbl`
+--
+ALTER TABLE `car_tbl`
+  ADD CONSTRAINT `car_tbl_ibfk_1` FOREIGN KEY (`DRF_id`) REFERENCES `drf_tbl` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cnc_mat_tbl`
+--
+ALTER TABLE `cnc_mat_tbl`
+  ADD CONSTRAINT `cnc_mat_tbl_ibfk_1` FOREIGN KEY (`CAR_id`) REFERENCES `car_tbl` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `dispo_table`
+--
+ALTER TABLE `dispo_table`
+  ADD CONSTRAINT `dispo_table_ibfk_1` FOREIGN KEY (`CNC_mat_id`) REFERENCES `cnc_mat_tbl` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `drf_tbl`
+--
+ALTER TABLE `drf_tbl`
+  ADD CONSTRAINT `drf_tbl_ibfk_1` FOREIGN KEY (`prod_dispo_id`) REFERENCES `prod_dispo_tbl` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `fomo`
 --
 ALTER TABLE `fomo`
@@ -1413,6 +1759,12 @@ ALTER TABLE `fomo`
 --
 ALTER TABLE `material`
   ADD CONSTRAINT `fk_ncpr_material` FOREIGN KEY (`ncpr_id`) REFERENCES `ncpr_table` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `prod_dispo_tbl`
+--
+ALTER TABLE `prod_dispo_tbl`
+  ADD CONSTRAINT `prod_dispo_tbl_ibfk_1` FOREIGN KEY (`rework_type_id`) REFERENCES `rework_type_tbl` (`id`);
 
 --
 -- Constraints for table `uploaded_file`
