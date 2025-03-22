@@ -1,11 +1,15 @@
 <?php
-require "config.php";
+// Prevent browser caching to avoid back button issues
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+include "config.php";
 $name = $_SESSION["user"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head>  
     <title>NCPR FILING - GUEST</title>
 
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/all.min.css">
