@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Fetch person_id of the user
-    $stmt = $conn->prepare("SELECT person_id FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->bind_result($person_id);
@@ -62,11 +62,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare("SELECT ncpr_num FROM ncpr_table WHERE ncpr_num = ?");
     $stmt->bind_param("s", $ncpr_num);
     $stmt->execute();
-    $stmt->bind_result($ncpr_id);
+    $stmt->bind_result($ncpr_num);
     $stmt->fetch();
     $stmt->close();
 
-    if (!$ncpr_id) {
+    if (!$ncpr_num) {
         echo json_encode(["status" => "error", "message" => "NCPR record not found."]);
         exit;
     }
@@ -117,9 +117,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Step 6: Insert approval action into dispo_sitioned
-        $status = ucfirst($action);
-        $stmt = $conn->prepare("INSERT INTO dispo_sitioned (status, approved_id, approved_role, action_date) VALUES (?, ?, ?, NOW())");
-        $stmt->bind_param("sis", $status, $person_id, $user_role);
+        $status = ucfirst(strtolower($action));  // Capitalize first letter and make sure it's lowercase
+        $stmt = $conn->prepare("INSERT INTO dispo_approval (ncpr_num, approver_role, approver_id, status, approval_date) VALUES (?, ?, ?, ?, NOW())");
+        $stmt->bind_param("ssis", $ncpr_num, $user_role, $person_id, $status);
 
         if (!$stmt->execute()) {
             throw new Exception("Failed to insert into dispo_sitioned.");
@@ -129,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Step 7: Update dispo_id in ncpr_table
         $stmt = $conn->prepare("UPDATE ncpr_table SET dispo_id = ? WHERE ncpr_num = ?");
-        $stmt->bind_param("is", $dispo_id, $ncpr_id);
+        $stmt->bind_param("is", $dispo_id, $ncpr_num);
 
         if (!$stmt->execute()) {
             throw new Exception("Failed to update ncpr_table.");

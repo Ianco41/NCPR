@@ -1,22 +1,23 @@
 <?php
-//require "config.php";
+require "config.php";
+$user_role = $_SESSION['role'];
+// Function to check if the role is allowed
+function isAuthorized($allowed_roles)
+{
+    global $user_role;
+    return in_array($user_role, $allowed_roles);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>admin Dashboard</title>
-    <!-- Bootstrap CSS (CDN) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-
-    <!-- Font Awesome (CDN) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="fontawesome-free-6.7.2-web/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/all.min.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/DataTables/datatables.min.css" />
+    <link rel="stylesheet" href="assets/css/sweetalert2.min.css">
 
 </head>
 <style>
@@ -180,7 +181,7 @@
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 <div class="sidebar-logo">
-                    <a href="#">ENGINEER</a>
+                    <a href="#"><?php echo $user_role ?></a>
                 </div>
             </div>
             <ul class="sidebar-nav">
@@ -188,12 +189,6 @@
                     <a href="engineer_dashboard.php" class="sidebar-link">
                         <i class="fa-solid fa-house"></i>
                         <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="ncprfiling.php" class="sidebar-link">
-                        <i class="fa-regular fa-folder-open"></i>
-                        <span>NCPR Filing</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -359,313 +354,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <div class="row d-flex">
-                        <div class="border mb-3 align-items-center p-2">
-                            <h5 class="text-center">NON-CONFORMING PRODUCT RECORD</h5>
-                        </div>
-                        <!-- Left Side Content (Takes up 9 columns) -->
-                        <div class="col-md-9 m-0">
-                            <div class="row">
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 12px"><strong>Initiator:</strong></span>
-                                    <span id="view-initiator" style="font-size: 12px"></span>
-                                </div>
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 12px"><strong>NCPR Number:</strong></span>
-                                    <span id="view-ncpr-num" style="font-size: 14px"></span>
-                                </div>
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 12px"><strong>Date:</strong></span>
-                                    <span id="view-date" style="font-size: 12px"></span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 12px"><strong>Part Number:</strong></span>
-                                    <span id="view-part-number" style="font-size: 14px"></span>
-                                </div>
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 12px"><strong>Part Name:</strong></span>
-                                    <span id="view-part-name" style="font-size: 14px"></span>
-                                </div>
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 12px"><strong>Process:</strong></span>
-                                    <span id="view-process" style="font-size: 14px"></span>
-                                </div>
-                            </div>
-                            <div class="row supplier-details">
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 15px"><strong>FOR ON HOLD MATERIAL ONLY</strong></span>
-                                </div>
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 12px"><strong>Supplier Part Name:</strong></span>
-                                    <span id="view-supplier-part-name" style="font-size: 14px"></span>
-                                </div>
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 12px"><strong>Supplier Part Number:</strong></span>
-                                    <span id="view-supplier-part-number" style="font-size: 14px"></span>
-                                </div>
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 12px"><strong>Supplier:</strong></span>
-                                    <span id="view-supplier" style="font-size: 14px"></span>
-                                </div>
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 12px"><strong>Invoice Number:</strong></span>
-                                    <span id="view-invoice-num" style="font-size: 14px"></span>
-                                </div>
-                                <div class="col-md-4 border p-2">
-                                    <span class="d-block" style="font-size: 12px"><strong>Purchase Order:</strong></span>
-                                    <span id="view-purchase-order" style="font-size: 14px"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Box (Aligned to the right) -->
-                        <div class="col-md-3 d-flex align-items-stretch g-0">
-                            <div class="right-box p-4 border w-100 text-center">
-                                <h3 style="color: red; font-weight: bold;">URGENT!</h3>
-                                <span>Check the checkbox if the held parts is a potential OTD Miss Shipment.</span>
-                                <!-- Large Checkbox -->
-                                <div class="mt-2">
-                                    <input type="checkbox" id="view-urgent-checkbox" name="urgent" class="form-check-input" style="transform: scale(1.8);">
-                                    <label for="view-urgent-checkbox" class="ms-2 fw-bold">Mark as Urgent</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row table-responsive m-0 g-0 p-0">
-                            <table class="table table-bordered text-center" id="material-table">
-                                <thead>
-                                    <tr>
-                                        <th style="font-size: 15px">NT DJ Number</th>
-                                        <th style="font-size: 15px">Material / NFLD Lob / Sublot Number</th>
-                                        <th style="font-size: 15px">Lot / Sublot Quantity</th>
-                                        <th style="font-size: 15px">Quantity Affected</th>
-                                        <th style="font-size: 15px">Defect Rate</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Material data will be inserted here dynamically -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <span style="font-size: 12px" class="fw-bold">Problem Description (specefic column/s where appropriate)</span>
-                    <div class="row">
-                        <div class="col-md-3 border p-2">
-                            <span class="d-block" style="font-size: 12px"><strong>Issue call out</strong></span><span id="view-issue" style="font-size: 15px"></span>
-                        </div>
-                        <div class="col-md-3 border p-2">
-                            <div class="d-flex">
-                                <p style="font-size: 10px;" class="me-5">
-                                    <strong>AWPI:</strong>
-                                    <span id="view-awpi" class="border-bottom border-dark d-inline-block text-center" style="min-width: 50px;"></span>
-                                </p>
-                                <p style="font-size: 10px;">
-                                    <strong>DC:</strong>
-                                    <span id="view-dc" class="border-bottom border-dark d-inline-block text-center" style="min-width: 50px;"></span>
-                                </p>
-                            </div>
-
-                            <div class="d-flex">
-                                <p style="font-size: 12px;"><strong>Deviation?</strong></p>
-                                <div class="form-check form-check-inline ms-5">
-                                    <input class="form-check-input form-check-input-sm" type="checkbox" id="deviation-yes">
-                                    <label class="form-check-label" for="deviation-yes" style="font-size: 10px;">Yes</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input form-check-input-sm" type="checkbox" id="deviation-no">
-                                    <label class="form-check-label" for="deviation-no" style="font-size: 10px;">No</label>
-                                </div>
-                            </div>
-
-                            <div class="d-flex align-items-center">
-                                <p class="m-0" style="font-size: 12px;"><strong>Issue Repeating?</strong></p>
-                                <div class="form-check form-check-inline" style="margin-left: 12px;">
-                                    <input class="form-check-input form-check-input-sm" type="checkbox" id="repeating-yes">
-                                    <label class="form-check-label" for="repeating-yes" style="font-size: 10px;">Yes</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input form-check-input-sm" type="checkbox" id="repeating-no">
-                                    <label class="form-check-label" for="repeating-no" style="font-size: 10px;">No</label>
-                                </div>
-                            </div>
-                            <div style="display: d-block; align-items: center;">
-                                <span class="d-inline-block" style="font-size: 12px;"><strong>Cavity Affected:</strong></span>
-                                <span id="view-cavity" class="border-bottom border-dark d-inline-block text-center" style="min-width: 100px; font-size: 12px"></span>
-                            </div>
-
-                            <div style="display: d-block; align-items: center;">
-                                <span class="d-inline-block" style="font-size: 12px;"><strong>Machine:</strong></span>
-                                <span id="view-machine" class="border-bottom border-dark d-inline-block text-center" style="min-width: 100px; font-size: 12px"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-3 border p-2">
-                            <span class="d-block" style="font-size: 12px"><strong>Criteria / Doc Reference</strong></span><span id="view-ref" style="font-size: 12px"></span>
-                        </div>
-                        <div class="col-md-3 border p-2">
-                            <span class="d-block" style="font-size: 12px"><strong>Issue background or information relevant in determining this root cause of the problem</strong></span><span id="view-bg" style="font-size: 12px"></span>
-                        </div>
-                    </div>
-                    <div class="row mt-3 border m-0">
-                        <div class="col-md-6 border p-2">
-                            <span style="font-size: 12px" class="fw-bold">Immediate containment action/s or countermeasure/s taken (tick as many as appropriate):</span>
-                            <div style="display: block; margin-bottom: 5px;">
-                                <div style="display: inline-flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-one" style="width: 12px; height: 12px; margin-right: 5px;">
-                                    <span style="font-size: 12px;">1. Segregate affected part/s - write custodian of the segregated parts</span>
-                                </div>
-                            </div>
-                            <div style="display: block;">
-                                <div style="display: inline-flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-one-one" style="width: 12px; height: 12px; margin-right: 5px;">
-                                    <span style="font-size: 12px;"><strong>1.1. At Hotpress:</strong>Put on hold inventory of affected lay-up materials together with the parts</span>
-                                </div>
-                            </div>
-                            <div style="display: block;">
-                                <div style="display: inline-flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-two" style="width: 12px; height: 12px; margin-right: 5px;">
-
-                                    <span style="font-size: 12px;" class="me-2">2. Yield off/ 100% inspection. <strong>INSPECTION RESULTS:</strong></span>
-                                    <span id="view-two-one" style="font-size: 12px; display: inline-block; border-bottom: 1px solid black; min-width: 100px;"></span>
-                                </div>
-                            </div>
-                            <div style="display: block;">
-                                <div style="display: inline-flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-three" style="width: 12px; height: 12px; margin-right: 5px;">
-                                    <span style="font-size: 12px;" class="me-2">3. Call the attention of QAE/PE/EE/TECH/CHIEF:</span>
-                                    <span id="view-three-one" style="font-size: 12px; display: inline-block; border-bottom: 1px solid black; min-width: 200px;"></span>
-                                </div>
-                            </div>
-                            <div style="display: block;">
-                                <div style="display: inline-flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-four" style="width: 12px; height: 12px; margin-right: 5px;">
-                                    <span id="view-four" style="font-size: 12px;" class="me-2">4. Attach On-hold Tag and put in On-Hold cage/area</span>
-                                </div>
-                            </div>
-                            <div style="display: block;">
-                                <div style="display: inline-flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-five" style="width: 12px; height: 12px; margin-right: 5px;">
-                                    <span id="view-five" style="font-size: 12px;">5. Check MCS stock for similar Lot Number/AWPI/DC and request to file NCPR</span>
-                                </div>
-                            </div>
-                            <div style="display: block;">
-                                <div style="display: inline-flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-six" style="width: 12px; height: 12px; margin-right: 5px;">
-                                    <span id="view-six" style="font-size: 12px;">6. Attach copy of OCAP if available, and/or other log forms as part of the containment action</span>
-                                </div>
-                            </div>
-                            <div style="display: inline-flex; align-items: center; gap: 10px;">
-                                <span style="font-size: 12px;">7. File Shutdown Record</span>
-
-                                <label style="font-size: 12px; display: flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-seven-yes" style="width: 12px; height: 12px; margin-right: 5px;"> Yes
-                                </label>
-
-                                <label style="font-size: 12px; display: flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-seven-no" style="width: 12px; height: 12px; margin-right: 5px;"> No
-                                </label>
-                                <span style="font-size: 12px;">WHO:</span>
-                                <span id="view-seven-one" style="font-size: 12px; display: inline-block; border-bottom: 1px solid black; min-width: 80px;"></span>
-                                <span style="font-size: 12px;">TIME/SHIFT:</span>
-                                <span id="view-seven-two" style="font-size: 12px; display: inline-block; border-bottom: 1px solid black; min-width: 80px;"></span>
-                            </div>
-                            <div style="display: block;">
-                                <div style="display: inline-flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-eight" style="width: 12px; height: 12px; margin-right: 5px;">
-                                    <span style="font-size: 12px;" class="me-2">8. Others (please specify):</span>
-                                    <span id="view-eight-one" style="font-size: 12px; display: inline-block; border-bottom: 1px solid black; min-width: 300px;"></span>
-                                </div>
-                            </div>
-                            <div style="display: block;">
-                                <div style="display: inline-flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-nine" style="width: 12px; height: 12px; margin-right: 5px;">
-                                    <span style="font-size: 12px;" class="me-2">9. Find affected WIP, FG & raw materials - specify DJ/s and LN/s</span>
-                                    <span id="view-nine-one" style="font-size: 12px; display: inline-block; border-bottom: 1px solid black; min-width: 150px;"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 border p-2">
-                            <div style="display: inline-flex; align-items: center; gap: 100px;" class="mb-3">
-                                <span style="font-size: 15px;">Product Recall</span>
-
-                                <label style="font-size: 15px; display: flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-recall-yes" style="margin-right: 5px;"> Yes
-                                </label>
-
-                                <label style="font-size: 15px; display: flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-recall-no" style="margin-right: 5px;"> No
-                                </label>
-                            </div>
-                            <div style="display: inline-flex; align-items: center; gap: 50px;" class="mb-3">
-                                <div style="display: block;">
-                                    <div style="display: inline-flex; align-items: center;">
-                                        <input type="checkbox" class="form-check-input" id="view-fgparts" style="margin-right: 5px;">
-                                        <span id="view-fgparts" style="font-size: 15px;">FG PARTS</span>
-                                    </div>
-                                </div>
-
-                                <span style="font-size: 15px;">Cancel Shipment</span>
-
-                                <label style="font-size: 15px; display: flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-shipment-yes" style="margin-right: 5px;"> Yes
-                                </label>
-
-                                <label style="font-size: 15px; display: flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-shipment-no" style="margin-right: 5px;"> No
-                                </label>
-                            </div>
-
-                            <span class="d-inline-block" style="font-size: 15px;"><strong>Shipment SCHEDULE:</strong></span>
-                            <span id="view-ship_sched" class="border-bottom border-dark d-inline-block text-center" style="min-width: 500px; font-size: 15px"></span>
-                            <div style="display: inline-flex; align-items: center; gap: 50px;" class="mt-3">
-                                <div style="display: block;">
-                                    <div style="display: inline-flex; align-items: center;">
-                                        <input type="checkbox" class="form-check-input" id="view-wip" style="margin-right: 5px;">
-                                        <span id="view-wip" style="font-size: 15px;">WIP</span>
-                                    </div>
-                                </div>
-
-                                <span style="font-size: 15px;">Stop Process</span>
-
-                                <label style="font-size: 15px; display: flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-stop_proc-yes" style="margin-right: 5px;"> Yes
-                                </label>
-
-                                <label style="font-size: 15px; display: flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-stop_proc-no" style="margin-right: 5px;"> No
-                                </label>
-                            </div>
-                            <div style="display: block;">
-                                <div style="display: d-block; align-items: center;">
-                                    <span class="d-inline-block" style="font-size: 15px;"><strong>LOCATIONS:</strong></span>
-                                    <span id="view-location" class="border-bottom border-dark d-inline-block text-center" style="min-width: 500px; font-size: 15px"></span>
-                                </div>
-                            </div>
-                            <div style="display: block;">
-                                <div style="display: inline-flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-mcs" style="margin-right: 5px;">
-                                    <div style="display: d-block; align-items: center;">
-                                        <span id="view-mcs" style="font-size: 15px;">MCS</span>
-                                        <span id="view-mcs_details" class="border-bottom border-dark d-inline-block text-center" style="min-width: 300px; font-size: 15px"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style="display: block;">
-                                <div style="display: inline-flex; align-items: center;">
-                                    <input type="checkbox" class="form-check-input" id="view-customer_notif" style="margin-right: 5px;">
-                                    <span id="view-customer_notif" style="font-size: 15px;">Customer notification if non-conforming products have been shipped.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <h5 class="text-center mb-5 mt-5">File Attachments</h5>
-                    <div id="file-list" class="d-block flex-wrap">
-                        <!-- Files will be dynamically inserted here -->
-                    </div>
+                    <!-- Content will be loaded here via AJAX -->
                 </div>
             </div>
         </div>
@@ -680,391 +369,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="dispoForm" action="dispo_process.php" method="POST">
-
-                        <div class="form-floating mb-3">
-                            <textarea class="form-control" name="containment" id="containment" placeholder="Enter details here..." style="height: 100px;"></textarea>
-                            <label for="containment">This space is intended for QA verification, containment and investigation activities</label>
-                        </div>
-
-                        <!-- Cause of Non-Conformance Table -->
-                        <table class="table table-bordered align-middle">
-                            <tr>
-                                <td>
-                                    <div class="form-floating">
-                                        <input class="form-control" name="non-conformance" id="non-conformance">
-                                        <label for="non-conformance">Cause of Non-conformance:</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <strong>Potential Field Failure:</strong><br>
-                                </td>
-                                <!-- Corrective Action Request -->
-                                <td class="d-flex align-items-center gap-3 mt-3">
-                                    <strong class="me-2">Corrective Action Request:</strong>
-                                    <div class="d-flex gap-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="corrective_action" value="YES" id="corrective_yes">
-                                            <label class="form-check-label" for="corrective_yes">YES</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="corrective_action" value="NO" id="corrective_no">
-                                            <label class="form-check-label" for="corrective_no">NO</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="corrective_action" value="NA" id="corrective_na">
-                                            <label class="form-check-label" for="corrective_na">NA</label>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <!-- Cause of Non-Conformance -->
-                                <td>
-                                    <div class="d-flex">
-                                        <!-- Left Side -->
-                                        <div class="me-4">
-                                            <input type="checkbox" name="cause[]" value="Man"> Man<br>
-                                            <label>ID No:</label>
-                                            <input type="text" name="id_no" class="border-0 border-bottom w-75"><br>
-                                            <label>Name:</label>
-                                            <input type="text" name="name" class="border-0 border-bottom w-75"><br>
-                                            <input type="checkbox" name="cause[]" value="Method"> Method<br>
-                                            <input type="checkbox" name="cause[]" value="Machine"> Machine<br>
-                                        </div>
-
-                                        <!-- Right Side -->
-                                        <div>
-                                            <input type="checkbox" name="cause[]" value="Material"> Material<br>
-                                            <input type="checkbox" name="cause[]" value="NID Item"> N.I.D Item<br>
-                                            <input type="checkbox" name="cause[]" value="NID Purchased Item"> N.I.D Purchased Item<br>
-                                            <input type="checkbox" name="cause[]" value="For Expiry Expired"> For Expiry Expired<br>
-                                            <input type="checkbox" name="cause[]" value="Local Supplier"> Local Supplier<br>
-                                            <input type="checkbox" name="cause[]" value="Customer Furnish Material">
-                                            <span style="color: blue; text-decoration: underline;">Customer Furnish Material</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <input type="radio" name="potential_failure" value="Yes" class="mb-5"> Yes<br>
-                                    <input type="radio" name="potential_failure" value="No"> No<br>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <input type="checkbox" name="car" value="CAR"> CAR, CAR No:
-                                        <input type="text" name="car_no" class="border-0 border-bottom w-20 ms-2">
-                                        <span class="me-2">8D Report:</span>
-                                        <input type="radio" name="bd_report" value="YES" class="me-1"> YES
-                                        <input type="radio" name="bd_report" value="NO" class="ms-3 me-1"> NO
-                                    </div>
-                                    <div class="d-flex align-items-center mt-5">
-                                        <input type="checkbox" name="scar" value="SCAR"> SCAR, SCAR No:
-                                        <input type="text" name="scar_no" class="border-0 border-bottom w-50"><br>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                        <div>
-                            <span class="fw-bold" style="font-size: 15px">
-                                Disposition Required From:
-                            </span>
-                        </div>
-                        <!-- Disposition Required From Section -->
-                        <table class="table table-bordered align-middle">
-                            <tr>
-                                <td colspan="2">
-                                    <input type="checkbox" name="dispo_from[]" value="NTPI"> NTPI
-
-                                    <strong>MRB:</strong>
-                                    <input type="radio" name="mrb" value="YES"> YES
-                                    <input type="radio" name="mrb" value="NO"> NO
-
-                                </td>
-                                <td>
-                                    <!-- First Checkbox Section -->
-                                    <div class="mb-2">
-                                        <input type="checkbox" name="dispo_from[]" value="NFLD"> NFLD (Attach reference e-mail)
-                                    </div>
-
-                                    <!-- Second Section with Spacing and Inline Layout -->
-                                    <div class="d-flex align-items-center flex-wrap gap-3">
-                                        <strong>Need Customer Approval?</strong>
-                                        <input type="radio" name="customer_approval" value="YES"> YES
-                                        <input type="radio" name="customer_approval" value="NO"> NO
-                                        <span>Document Alert No:</span>
-                                        <input type="text" name="document_alert" class="border-0 border-bottom w-25">
-                                    </div>
-
-                                </td>
-                            </tr>
-
-                            <table class="table border">
-                                <tr>
-                                    <!-- Left Side: Impact Analysis / Risk Assessment -->
-                                    <td colspan="2">
-                                        <strong>IMPACT ANALYSIS / RISK ASSESSMENT:</strong>
-                                        <div class="d-flex gap-3 align-items-center flex-wrap mt-2">
-                                            <input type="checkbox" name="impact_analysis[]" value="Review of NCP FMEA"> Review of NCP FMEA
-                                            <input type="checkbox" name="impact_analysis[]" value="Review of NCP Control Plan"> Review of NCP Control Plan
-                                        </div>
-                                        <div class="form-floating w-100 mt-2">
-                                            <textarea id="impact_analysis" name="impact_analysis" class="form-control" placeholder="Enter impact analysis here..." rows="2"></textarea>
-                                            <label for="impact_analysis">Notes:</label>
-                                        </div>
-                                    </td>
-
-                                    <!-- Right Section (Spanning Rows) -->
-                                    <td style="width: 40%; vertical-align: top;" rowspan="2">
-                                        <div class="h-100 d-flex flex-column justify-content-between">
-                                            <div class="mb-2">
-                                                <input type="checkbox" name="affected_business" value="Affected business"> Affected business unit/ contact person <br>
-                                                <input type="text" name="contact_person" class="border-0 border-bottom w-100">
-                                            </div>
-                                            <div>
-                                                <input type="checkbox" name="other_instructions" value="Other instructions"> Other instructions,
-                                                <span>pls specify;</span><br>
-                                                <input type="text" name="other_specify" class="border-0 border-bottom w-100">
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <!-- Product Disposition (Left Side) -->
-                                <tr>
-                                    <td colspan="2">
-                                        <strong>PRODUCT DISPOSITION:</strong>
-                                        <div class="d-flex gap-3 align-items-center flex-wrap mt-2">
-                                            <input type="checkbox" name="product_dispo[]" value="Use as is"> Use as is
-                                            <input type="checkbox" name="product_dispo[]" value="Re-inspection"> Re-inspection
-                                            <input type="checkbox" name="product_dispo[]" value="Run under normal process"> Run under normal process
-                                        </div>
-                                        <div class="d-flex align-items-center mt-2">
-                                            Yield-off $ <input type="text" name="yield_off" class="border-0 border-bottom w-25 ms-2">
-                                        </div>
-                                        <div class="d-flex align-items-center mt-2 gap-2">
-                                            <input type="checkbox" name="product_dispo[]" value="Re-grade"> Re-grade, DA No:
-                                            <input type="text" name="da_no" class="border-0 border-bottom w-25 ms-2">
-                                        </div>
-                                        <div class="d-flex align-items-center mt-2 gap-2">
-                                            <input type="checkbox" name="product_dispo[]" value="Rework"> Rework, DA No:
-                                            <input type="text" name="rework_da_no" class="border-0 border-bottom w-25 ms-2">
-                                            WIS No:
-                                            <input type="text" name="wis_no" class="border-0 border-bottom w-25 ms-2">
-                                        </div>
-                                        <div class="d-flex gap-3 align-items-center flex-wrap mt-2 gap-2">
-                                            <input type="checkbox" name="product_dispo[]" value="Re-press"> Re-press
-                                            <input type="checkbox" name="product_dispo[]" value="Re-plate"> Re-plate
-                                            <input type="checkbox" name="product_dispo[]" value="Re-Etest"> <span>Re-Etest</span>
-                                            <input type="checkbox" name="product_dispo[]" value="Re-measure"> Re-measure
-                                            <input type="checkbox" name="product_dispo[]" value="Rework Traveler"> Rework Traveler
-                                        </div>
-                                        <div class="d-flex align-items-center mt-2 gap-2">
-                                            <input type="checkbox" name="product_dispo[]" value="Repair"> Repair, Document Alert #:
-                                            <input type="text" name="document_alert" class="border-0 border-bottom w-25 ms-2">
-                                            <input type="checkbox" name="product_dispo[]" value="Rework Traveler"> Rework Traveler
-                                        </div>
-                                        <div class="d-flex align-items-center mt-2 gap-2">
-                                            <input type="checkbox" name="product_dispo[]" value="Scrap"> Scrap $
-                                            <input type="text" name="scrap_amount" class="border-0 border-bottom w-25 ms-2">
-                                        </div>
-                                        <div class="d-flex align-items-center mt-2">
-                                            <input type="checkbox" name="product_dispo[]" value="RTV"> RTV <span style="color: blue; text-decoration: underline; margin-left: 20px;">Shipment Date:</span>
-                                            <input type="text" name="shipment_date" class="border-0 border-bottom w-25 ms-2">
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                            <div>
-                                <span class="fw-bold" style="font-size: 15px">
-                                    For non-conforming product disposition requiring PE/ EE intervention; Otherwise, not applicable.
-                                </span>
-                            </div>
-
-                            <table class="table table-bordered">
-
-                                <!-- Actions Taken & Reason for Resumption -->
-                                <tr>
-                                    <td style="width: 33%; vertical-align: top;">
-                                        <strong>Actions Taken:</strong><br>
-                                        <input type="checkbox" name="actions_taken[]" value="Problem solving/troubleshooting"> Problem solving/troubleshooting<br>
-                                        <input type="checkbox" name="actions_taken[]" value="Process Verification/Engg Eval"> Process Verification /
-                                        <span>Eng'g Eval.</span>
-
-                                        <br><br>
-                                        <strong>Process Disposition:</strong><br>
-                                        <input type="checkbox" name="process_dispo[]" value="Resume Production"> Resume Production<br>
-                                        <input type="checkbox" name="process_dispo[]" value="Stop Production"> Stop Production
-                                        <br><br>
-                                        <span>Affected process/es:</span>
-                                        <input type="text" name="affected_process" class="border-0 border-bottom w-100"><br><br>
-                                        <input type="checkbox" name="further_eval" value="For further Eng'g Evaluation">
-                                        <span>For further Eng’g Evaluation</span>
-                                    </td>
-
-                                    <td style="width: 33%; vertical-align: top;">
-                                        <strong>Reason for Resumption:</strong><br>
-                                        <input type="checkbox" name="resumption_reason[]" value="Criteria"> Criteria
-                                        <input type="checkbox" name="resumption_reason[]" value="Method"> Method
-                                        <input type="checkbox" name="resumption_reason[]" value="Materials"> Materials
-                                        <input type="checkbox" name="resumption_reason[]" value="Machine"> Machine
-                                        <br><br>
-                                        <input type="checkbox" name="resumption_reason[]" value="Machine/fixture repair"> Machine/fixture repair<br>
-                                        <input type="checkbox" name="resumption_reason[]" value="Others">
-                                        <span>Others, pls specify</span>
-                                        <br>
-                                        <input type="text" name="other_resumption" class="border-0 border-bottom w-100"><br><br>
-
-                                        <strong>Process Instruction in general:</strong>
-                                        <span>(for <span>DJs</span> other than the affected)</span>
-                                        <textarea class="form-control mt-2" name="process_instruction" rows="2"></textarea>
-                                    </td>
-
-                                    <td style="width: 33%; vertical-align: top;">
-                                        <strong>Instructions in detail, see reference doc:</strong><br>
-                                        <input type="checkbox" name="instructions_detail[]" value="Document Alert #"> Document Alert #:
-                                        <input type="text" name="document_alert" class="border-0 border-bottom w-75"><br>
-
-                                        <input type="checkbox" name="instructions_detail[]" value="Other">
-                                        <span>Other (pls specify)</span>
-                                        <input type="text" name="other_specify" class="border-0 border-bottom w-75">
-                                        <br><br>
-
-                                        <strong>Documents needing revision:</strong><br>
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="documents_revision[]" value="N/A" id="doc_na">
-                                                <label class="form-check-label" for="doc_na" style="font-size: 12px;">N/A</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="documents_revision[]" value="WIS" id="doc_wis">
-                                                <label class="form-check-label" for="doc_wis" style="font-size: 12px;">WIS</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="documents_revision[]" value="DJ" id="doc_dj">
-                                                <label class="form-check-label" for="doc_dj" style="font-size: 12px;">DJ</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="documents_revision[]" value="PROC" id="doc_proc">
-                                                <label class="form-check-label" for="doc_proc" style="font-size: 12px;">PROC</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="documents_revision[]" value="CP" id="doc_cp">
-                                                <label class="form-check-label" for="doc_cp" style="font-size: 12px;">CP</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="documents_revision[]" value="PFMEA" id="doc_pfmea">
-                                                <label class="form-check-label" for="doc_pfmea" style="font-size: 12px;">PFMEA</label>
-                                            </div>
-                                        </div>
-
-                                        <br><br>
-
-                                        <strong>Process Released By:</strong>
-                                        <input type="text" name="released_by" class="border-0 border-bottom w-100">
-                                        <br>
-                                        <div class="text-center mt-3">
-                                            <small>(Signature Above Printed Name/ Date)</small>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- Approving Authorities & Distribution Section -->
-                            <table class="table table-bordered mt-3">
-                                <tr>
-                                    <th colspan="4" class="text-center">Approving Authorities</th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <strong>QA Engineer / NT Representative:</strong><br>
-                                        (Signature & Date)
-                                    </td>
-                                    <td>
-                                        <strong>QA Manager or his/her appointee:</strong><br>
-                                        (Signature & Date)
-                                    </td>
-                                    <td>
-                                        <strong>Sheilah / NT Representative:</strong><br>
-                                        (Signature & Date)
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-floating">
-                                            <input type="text" name="acknowledgment_signature" class="form-control" id="acknowledgment_signature" placeholder="Signature">
-                                            <label for="acknowledgment_signature"><strong>Acknowledgment</strong></label>
-                                        </div>
-                                        <small class="text-muted">(Applies only with CAR & COPQ issues)</small>
-                                    </td>
-
-                                    <!-- PE or EE Head Section -->
-                                    <td>
-                                        <div class="form-floating">
-                                            <input type="text" name="pe_ee_head_signature" class="form-control" id="pe_ee_head_signature" placeholder="PE or EE Head">
-                                            <label for="pe_ee_head_signature"><strong>PE or EE Head or his/her appointee:</strong></label>
-                                        </div>
-                                    </td>
-
-                                    <!-- Production Manager Section -->
-                                    <td>
-                                        <div class="form-floating">
-                                            <input type="text" name="prod_manager_signature" class="form-control" id="prod_manager_signature" placeholder="Production Manager">
-                                            <label for="prod_manager_signature"><strong>Production Manager or his/her appointee:</strong></label>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                            <table class="table table-bordered mt-3">
-                                <!-- File Attachment Section -->
-                                <tr>
-                                    <td colspan="3">
-                                        <strong>Attach Supporting Documents:</strong><br>
-                                        <div id="fileUploadContainer">
-                                            <div class="file-input-group d-flex align-items-center">
-                                                <input type="file" name="attachments[]" class="form-control mb-2">
-                                            </div>
-                                        </div>
-                                        <button type="button" class="btn btn-primary btn-sm mt-2" onclick="addFileInput()">Add More Files</button>
-                                        <small class="text-muted d-block mt-1">You can upload multiple files (Excel, PDF, Images, etc.).</small>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <script>
-                                function addFileInput() {
-                                    let container = document.getElementById('fileUploadContainer');
-
-                                    let div = document.createElement('div');
-                                    div.className = "file-input-group d-flex align-items-center";
-
-                                    let input = document.createElement('input');
-                                    input.type = 'file';
-                                    input.name = 'attachments[]';
-                                    input.className = 'form-control mb-2';
-
-                                    let removeBtn = document.createElement('button');
-                                    removeBtn.type = 'button';
-                                    removeBtn.className = 'btn btn-danger ms-2';
-                                    removeBtn.innerHTML = 'Delete';
-                                    removeBtn.onclick = function() {
-                                        removeFileInput(this);
-                                    };
-
-                                    div.appendChild(input);
-                                    div.appendChild(removeBtn);
-                                    container.appendChild(div);
-                                }
-
-                                function removeFileInput(button) {
-                                    button.parentElement.remove();
-                                }
-                            </script>
-
-                            <div class="text-end p-3">
-                                <button type="submit" class="btn btn-success">APPROVE</button>
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">REJECT</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
-                            </div>
-                    </form>
+                    <!-- Content will be loaded here  -->
+                    <?php include "disposition.php"; ?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1073,17 +379,12 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/jquery.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/all.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/fontawesome.min.js"></script>
+    <script src="assets/DataTables/datatables.min.js"></script>
+    <script src="assets/js/sweetalert2.min.js"></script>
     <script src="assets/js/viewmodal.js"></script>
     <script src="assets/js/approval.js"></script>
 
@@ -1116,16 +417,13 @@
                         "data": "id",
                         "render": function(data, type, row) {
                             return `
-                        <button class="btn btn-primary btn-sm view-btn" 
-                                data-id="${row.ncpr_num}" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#viewModal">
-                            View
+                        <button class="btn btn-primary btn-sm view-btn" data-id="${row.ncpr_num}">
+                            <i class="fas fa-eye"></i> View
                         </button>
-                        <button class="btn btn-success btn-sm add-btn" 
+                        <button class="btn btn-success btn-sm dispo-btn" 
                                 data-id="${row.ncpr_num}" 
                                 data-bs-toggle="modal" 
-                                data-bs-target="#dispoModal">
+                                data-bs-target="#dispoModal"><i class="fas fa-add"></i>
                             Dispo
                         </button>`;
                         }
@@ -1134,8 +432,44 @@
                 "order": [
                     [0, "desc"]
                 ],
+                "language": {
+                    "emptyTable": "No Available NCPR Filing"
+                }
+            });
+            let selectedId = "";
+
+            // Handle dynamically created "Add" buttons using event delegation
+            $('#ncprTable tbody').on('click', '.add-btn', function() {
+                selectedId = $(this).data('id'); // Get the ID from the clicked button
+                console.log("Button clicked, selectedId:", selectedId); // Debugging
+                $("#modal-id").text(selectedId); // Display ID inside modal
             });
         });
+
+        function fetchNcprDetails(ncprNum, viewOnly) {
+            $.ajax({
+                url: 'fetch_ncpr_details2.php',
+                method: 'GET', // Use GET to match PHP script
+                data: {
+                    ncpr_num: ncprNum,
+                    viewOnly: viewOnly
+                },
+                success: function(response) {
+                    $('#viewModal .modal-body').html(response); // Insert HTML response into modal
+                    $('#viewModal').modal('show'); // Show modal
+                },
+                error: function() {
+                    alert('Error fetching data.');
+                }
+            });
+        }
+
+        // Attach event listener to button
+        $(document).on('click', '.view-btn', function() {
+            var ncprNum = $(this).data('id');
+            fetchNcprDetails(ncprNum, true);
+        });
+
         $(document).ready(function() {
             $('#ncprTable tbody').on('click', '.dispo-btn', function() {
                 var ncprNum = $(this).data('id');
